@@ -1,8 +1,8 @@
 from models.db.db_conn import DBConn
 
 
-class CntList:
-    cnt_list_singleton = None
+class CntCollections:
+    cnt_collections_obj = None
 
     def __init__(self):
         self._new_cnt = set()

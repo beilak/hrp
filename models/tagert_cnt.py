@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, ForeignKey, String, Numeric, CHAR
 from sqlalchemy.orm import declarative_base
 from models.db.db_conn import DBConn
 from models.unit import Unit
-from models.cnt_list import CntList
+from models.cnt_collections import CntCollections
 
 Base = declarative_base()
 
@@ -19,16 +19,16 @@ class TargetCnt(Base):
 
 def target_cnt_singleton(cls):
     def get_singleton():
-        if cls.trg_cnt_list_singleton is None:
-            cls.trg_cnt_list_singleton = cls()
-        return cls.trg_cnt_list_singleton
+        if cls.trg_cnt_collections is None:
+            cls.trg_cnt_collections = cls()
+        return cls.trg_cnt_collections
 
     return get_singleton
 
 
 @target_cnt_singleton
-class TargetCntList(CntList):
-    trg_cnt_list_singleton = None
+class TargetCntCollections(CntCollections):
+    trg_cnt_collections = None
 
     def create(self, name, value, currency) -> TargetCnt:
         user = TargetCnt(name=name, value=value,

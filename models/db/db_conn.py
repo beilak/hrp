@@ -12,9 +12,7 @@ DRIVER = "psycopg2"
 
 class DBConn:
     _db_engine = None
-    #_Session = None
-
-    sessions = dict()
+    # sessions = dict()
 
     @classmethod
     def _get_db_engine(cls, host, user, password):
