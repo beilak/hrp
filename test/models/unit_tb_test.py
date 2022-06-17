@@ -1,20 +1,31 @@
 import unittest
-from models.unit import UnitCollections, Unit
+from models.unit import UnitCollection, Unit
+from models.pydatic_schemas.schemas import UnitIn
+import datetime
+from models.user import User
 
 
 class UnitTestCase(unittest.TestCase):
-    TEST_UNIT_ID = "TEST_UNIT"
-    TEST_UNIT_NAME = "Test unit"
-    TEST_UNIT_ADMIN = "beilak"
+    TEST_UNITS = dict(test_unit_1=UnitIn(unit_id="test_unit_id_1", description="TEST UNIT",
+                                         admin="TEST_USER1", join_pass="MyJoinPass"))
+
+    @classmethod
+    def setUpClass(cls):
+        test_unit = cls.TEST_UNITS["test_unit_1"]
+        if UnitCollection.is_unit_exist(test_unit.unit_id) is False:
+            UnitCollection.create(test_unit)
 
     def test_create_unit(self):
-        unit: Unit = UnitCollections.create_unit(unit_id=self.TEST_UNIT_ID, name=self.TEST_UNIT_NAME,
-                                                 admin=self.TEST_UNIT_ADMIN)
+        test_unit = self.TEST_UNITS["test_unit_1"]
+
+        while True:
+            test_unit.unit_id = "test_unit_id{}".format(str(datetime.datetime.now().microsecond))
+            if UnitCollection.is_unit_exist(test_unit.unit_id) is True:
+                continue
+            break
+        unit: Unit = UnitCollection.create(test_unit)
         is_created = False if unit is None else True
         self.assertEqual(is_created, True)
-
-    def test_get_unit(self):
-        print(Unit.get_unit(self.TEST_UNIT_ID))
 
 
 if __name__ == '__main__':

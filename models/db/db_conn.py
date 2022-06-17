@@ -3,7 +3,9 @@ import key_tool
 #import psycopg2 import OperationalError
 import sqlalchemy.exc
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import declarative_base
 
+Base = declarative_base()
 
 DB = "HRP"
 DB_SYS = "postgresql"
@@ -16,7 +18,7 @@ class DBConn:
 
     @classmethod
     def _get_db_engine(cls, host, user, password):
-        return create_engine(DB_SYS+"+"+DRIVER+"://"+user+":"+password+"@"+host+"/" + DB)
+        return create_engine(DB_SYS+"+"+DRIVER+"://"+user+":"+password+"@"+host+"/" + DB, future=True, echo=True)
 
     @classmethod
     def get_db_connect(cls):

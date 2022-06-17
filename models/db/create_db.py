@@ -2,11 +2,9 @@ from sqlalchemy.orm import declarative_base
 from models.db.db_conn import DBConn
 from models.unit import Unit
 from models.user import User
+from models.unit_user import UnitUser
+from models.db.db_conn import Base
 
-Base = declarative_base()
-
-
-User.metadata.create_all(DBConn.get_db_connect())
-Unit.metadata.create_all(DBConn.get_db_connect())
-
+Base.metadata.drop_all(DBConn.get_db_connect())
+Base.metadata.create_all(DBConn.get_db_connect())
 
