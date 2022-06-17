@@ -13,7 +13,7 @@ from typing import List
 hrp_api = FastAPI()
 
 
-@hrp_api.get("/users/", response_model=List[UserOut])
+@hrp_api.get("/users/", status_code=status.HTTP_200_OK, response_model=List[UserOut])
 def get_users(skip: int = 0, limit: int = 100):
     users = UserCollection.get_users(offset=skip, limit=limit)
     users_out = []
@@ -22,7 +22,7 @@ def get_users(skip: int = 0, limit: int = 100):
     return users_out
 
 
-@hrp_api.get("/users/{login}", response_model=UserOut)
+@hrp_api.get("/users/{login}", status_code=status.HTTP_200_OK, response_model=UserOut)
 async def get_user(login: str):
     user: User = UserCollection.get_user(login)
     return UserOut(**user.__dict__)
@@ -37,24 +37,23 @@ async def create_user(user: UserIn):
 
 
 @hrp_api.put("/users/{login}", status_code=status.HTTP_200_OK, response_model=UserOut)
-async def create_user(user: UserIn):
+async def update_user(user: UserIn):
     # ToDo Update User date
     pass
 
 
-@hrp_api.put("/users/{login}/join_to_unit", status_code=status.HTTP_200_OK, response_model=UserUnitOut)
-async def user_join_to_unit(join: UserUnitIn):
-    unit = UnitCollection.get_unit(join.unit_id)
+@hrp_api.post("/units/", status_code=status.HTTP_201_CREATED, response_model=UnitOut)
+async def create_unit(unit: UnitIn):
+    if UnitCollection.is_unit_exist(unit.unit_id) is True:
+        raise HTTPException(status_code=409, detail="Unit already exist")
     try:
-        user = UserCollection.join_to_unit(join.login, unit)
-        units = [UnitOut(**i.__dict__) for i in user.units]
-    except ModelError as Error:
-        raise HTTPException(status_code=409, detail=str(Error))
-
-    return UserUnitOut(login=user.login, units=units)
+        created_unit = UnitCollection.create(unit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    return UnitOut(**created_unit.__dict__)
 
 
-@hrp_api.get("/units/", response_model=List[UnitOut])
+@hrp_api.get("/units/", status_code=status.HTTP_200_OK, response_model=List[UnitOut])
 async def get_units(skip: int = 0, limit: int = 100):
     units = UnitCollection.get_units(offset=skip, limit=limit)
     unit_out = []
@@ -72,15 +71,20 @@ async def get_unit(unit_id: str):
     return UnitOut(**unit.__dict__)
 
 
-@hrp_api.post("/units/", status_code=status.HTTP_201_CREATED, response_model=UnitOut)
-async def create_unit(unit: UnitIn):
-    if UnitCollection.is_unit_exist(unit.unit_id) is True:
-        raise HTTPException(status_code=409, detail="Unit already exist")
-    created_unit = UnitCollection.create(unit)
-    return UnitOut(**created_unit.__dict__)
+@hrp_api.put("/users/{login}/join_to_unit", status_code=status.HTTP_200_OK,
+             response_model=UserUnitOut)
+async def user_join_to_unit(join: UserUnitIn):
+    unit = UnitCollection.get_unit(join.unit_id)
+    try:
+        user = UserCollection.join_to_unit(join.login, unit)
+        units = [UnitOut(**i.__dict__) for i in user.units]
+    except ModelError as Error:
+        raise HTTPException(status_code=409, detail=str(Error))
+    return UserUnitOut(login=user.login, units=units)
 
 
-@hrp_api.get("/units/{unit_id}/users", response_model=UnitUserOut)
+@hrp_api.get("/units/{unit_id}/users", status_code=status.HTTP_200_OK,
+             response_model=UnitUserOut)
 async def get_unit_users(unit_id: str):
     try:
         unit: Unit = UnitCollection.get_unit(unit_id)

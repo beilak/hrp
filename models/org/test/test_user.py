@@ -6,7 +6,7 @@ from models.org.unit import UnitCollection
 import datetime
 
 
-class UserTestCase(unittest.TestCase):
+class UserTest(unittest.TestCase):
     TEST_USERS = dict(test_user_1=UserIn(login="TEST_USER1", first_name="Test_name",
                                          last_name="Test_last_name", password="MyPass",
                                          email="test_user@test.ru"))
@@ -14,7 +14,7 @@ class UserTestCase(unittest.TestCase):
                                          admin="TEST_USER1", join_pass="MyJoinPass"))
 
     def __init__(self, *args, **kwargs):
-        super(UserTestCase, self).__init__(*args, **kwargs)
+        super(UserTest, self).__init__(*args, **kwargs)
         self.created_user = set()
 
     @classmethod
@@ -25,7 +25,6 @@ class UserTestCase(unittest.TestCase):
 
     def test_creating_user(self):
         test_user_1 = self.TEST_USERS["test_user_1"]
-        #test_unit_1 = self.TEST_UNITS["test_unit_1"]
 
         while True:
             test_user_1.login = "test_user_{}".format(str(datetime.datetime.now().microsecond))

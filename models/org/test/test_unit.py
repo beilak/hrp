@@ -5,7 +5,7 @@ from models.org.pydatic_schemas.schemas import UnitIn
 import datetime
 
 
-class UnitTestCase(unittest.TestCase):
+class UnitTest(unittest.TestCase):
     TEST_UNITS = dict(test_unit_1=UnitIn(unit_id="test_unit_id_1", description="TEST UNIT",
                                          admin="TEST_USER1", join_pass="MyJoinPass"))
 

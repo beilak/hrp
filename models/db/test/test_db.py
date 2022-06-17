@@ -2,7 +2,7 @@ import unittest
 from models.db.db_conn import DBConn
 
 
-class MyTestCase(unittest.TestCase):
+class DBTest(unittest.TestCase):
 
     def test_get_db_connect(self):
         db_engine = DBConn.get_db_connect()
