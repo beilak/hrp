@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, ForeignKey, String, Numeric, CHAR
 from sqlalchemy.orm import declarative_base
 from models.db.db_conn import DBConn
-from models.unit import Unit
-from models.cnt_collections import CntCollections
+from models.org.db_schemas.unit import Unit
+from models.finance.cnt_collections import CntCollections
 
 Base = declarative_base()
 

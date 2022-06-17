@@ -1,33 +1,9 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy.sql import func, exists
-from sqlalchemy_utils import EmailType, PasswordType
+from sqlalchemy.sql import exists
 from models.db.db_conn import DBConn
-from models.collection import Collection
-
+from models.org.collection import Collection
 from models.model_exceptions.ModelError import ModelError
-
-from models.unit_user import UnitUser
-from models.pydatic_schemas.schemas import UserIn
-
-#from models.unit import Unit
-
-#Base = declarative_base()
-from models.db.db_conn import Base
-
-
-class User(Base):
-    __tablename__ = "users"
-    user_id_type = Integer()
-    login = Column(String(32), primary_key=True)
-    password = Column(PasswordType(schemes=['pbkdf2_sha512']))
-    first_name = Column(String(32))
-    last_name = Column(String(32))
-    email = Column(EmailType)
-    cr_date = Column(DateTime(timezone=True), server_default=func.now())
-    upd_date = Column(DateTime(timezone=True), onupdate=func.now())
-    units = relationship('Unit', secondary=UnitUser, uselist=True,
-                         back_populates="users", lazy='joined')
+from models.org.db_schemas.user import User
+from models.org.pydatic_schemas.schemas import UserIn
 
 
 class UserCollection(Collection):

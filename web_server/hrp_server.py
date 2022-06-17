@@ -1,8 +1,10 @@
 from fastapi import FastAPI, status, HTTPException
-from models.user import UserCollection, User
-from models.unit import UnitCollection, Unit
-from models.pydatic_schemas.schemas import UserIn, UserOut, UnitIn, UnitOut
-from models.pydatic_schemas.UnitUser import UserUnitIn, UserUnitOut, UnitUserOut
+from models.org.user import UserCollection
+from models.org.db_schemas.user import User
+from models.org.unit import UnitCollection
+from models.org.db_schemas.unit import Unit
+from models.org.pydatic_schemas.schemas import UserIn, UserOut, UnitIn, UnitOut
+from models.org.pydatic_schemas.UnitUser import UserUnitIn, UserUnitOut, UnitUserOut
 from sqlalchemy.exc import NoResultFound
 
 from models.model_exceptions.ModelError import ModelError

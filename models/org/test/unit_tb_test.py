@@ -1,8 +1,8 @@
 import unittest
-from models.unit import UnitCollection, Unit
-from models.pydatic_schemas.schemas import UnitIn
+from models.org.unit import UnitCollection
+from models.org.db_schemas.unit import Unit
+from models.org.pydatic_schemas.schemas import UnitIn
 import datetime
-from models.user import User
 
 
 class UnitTestCase(unittest.TestCase):

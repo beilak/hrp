@@ -1,7 +1,8 @@
 import unittest
-from models.user import UserCollection, User
-from models.pydatic_schemas.schemas import UserIn, UserOut, UnitIn
-from models.unit import Unit, UnitCollection
+from models.org.user import UserCollection
+from models.org.db_schemas.user import User
+from models.org.pydatic_schemas.schemas import UserIn, UnitIn
+from models.org.unit import UnitCollection
 import datetime
 
 

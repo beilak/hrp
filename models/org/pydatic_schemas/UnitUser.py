@@ -1,8 +1,8 @@
 from pydantic import BaseModel, validator
 
-from models.unit import UnitCollection
-from models.user import UserCollection
-from models.pydatic_schemas.schemas import UnitOut, UserOut
+from models.org.unit import UnitCollection
+from models.org.user import UserCollection
+from models.org.pydatic_schemas.schemas import UnitOut, UserOut
 from typing import List
 
 
