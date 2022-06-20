@@ -2,12 +2,11 @@ import os
 from sqlalchemy.sql import exists
 from models.db.db_conn import DBConn
 from models.model_exceptions.ModelError import ModelError
-from models.org.db_schemas.unit import Unit
-from models.org.pydatic_schemas.schemas import UnitIn
+from models.org.db_schemas.db_unit import Unit
+from models.org.pydatic_schemas.user_model import UnitIn
 
 
-class UnitCollection:
-    # ToDo Add list of units
+class UnitFactory:
 
     @classmethod
     def create(cls, unit_in: UnitIn):

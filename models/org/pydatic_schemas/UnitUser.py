@@ -1,8 +1,8 @@
 from pydantic import BaseModel, validator
 
-from models.org.unit import UnitCollection
-from models.org.user import UserCollection
-from models.org.pydatic_schemas.schemas import UnitOut, UserOut
+from models.org.unit import UnitFactory
+from models.org.user import UserFactory
+from models.org.pydatic_schemas.user_model import UnitOut, UserOut
 from typing import List
 
 
@@ -12,13 +12,13 @@ class UserUnitIn(BaseModel):
 
     @validator("login")
     def is_user_exist(cls, value):
-        if UserCollection.is_user_exist(value) is False:
+        if UserFactory.is_user_exist(value) is False:
             raise ValueError("User didn't created yet")
         return value
 
     @validator("unit_id")
     def is_unit_exist(cls, value):
-        if UnitCollection.is_unit_exist(value) is False:
+        if UnitFactory.is_unit_exist(value) is False:
             raise ValueError("Unit didn't created yet")
         return value
 

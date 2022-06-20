@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import PasswordType
 
 from models.db.db_conn import Base
-from models.org.db_schemas.unit_user import UnitUser
-from models.org.db_schemas.user import User
+from models.org.db_schemas.db_unit_user import UnitUser
+from models.org.db_schemas.db_user import User
 
 
 class Unit(Base):

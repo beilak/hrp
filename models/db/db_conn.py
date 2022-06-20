@@ -48,3 +48,4 @@ class DBConn:
         with cls.get_new_session() as session:
             session.add_all(tb_obj)
             session.commit()
+

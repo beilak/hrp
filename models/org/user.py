@@ -1,12 +1,11 @@
 from sqlalchemy.sql import exists
 from models.db.db_conn import DBConn
-from models.org.collection import Collection
 from models.model_exceptions.ModelError import ModelError
-from models.org.db_schemas.user import User
-from models.org.pydatic_schemas.schemas import UserIn
+from models.org.db_schemas.db_user import User
+from models.org.pydatic_schemas.user_model import UserIn
 
 
-class UserCollection(Collection):
+class UserFactory:
 
     @classmethod
     def create(cls, cr_user: UserIn) -> User:
@@ -14,7 +13,7 @@ class UserCollection(Collection):
         if cls.is_user_exist(login) is True:
             raise ModelError("User already exist")
         user = User(**cr_user.dict())
-        cls._insert_db({user})
+        DBConn.insert({user})
         user = cls.get_user(login)
         return user
 

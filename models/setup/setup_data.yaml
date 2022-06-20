@@ -1,0 +1,9 @@
+acc_types:
+- CHASE:
+    name: "Chase"
+- DEBIT_CARD:
+    name: "Debit card"
+- BANK_ACCOUNT:
+    name: "Bank account"
+- BROKERAGE_ACCOUNT:
+    name: "Brokerage account"

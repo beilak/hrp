@@ -1,8 +1,8 @@
 import unittest
-from models.org.user import UserCollection
-from models.org.db_schemas.user import User
-from models.org.pydatic_schemas.schemas import UserIn, UnitIn
-from models.org.unit import UnitCollection
+from models.org.user import UserFactory
+from models.org.db_schemas.db_user import User
+from models.org.pydatic_schemas.user_model import UserIn, UnitIn
+from models.org.unit import UnitFactory
 import datetime
 
 
@@ -20,19 +20,19 @@ class UserTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         test_user_1 = cls.TEST_USERS["test_user_1"]
-        if UserCollection.is_user_exist(test_user_1.login) is False:
-            UserCollection.create(test_user_1)
+        if UserFactory.is_user_exist(test_user_1.login) is False:
+            UserFactory.create(test_user_1)
 
     def test_creating_user(self):
         test_user_1 = self.TEST_USERS["test_user_1"]
 
         while True:
             test_user_1.login = "test_user_{}".format(str(datetime.datetime.now().microsecond))
-            if UserCollection.is_user_exist(test_user_1.login) is True:
+            if UserFactory.is_user_exist(test_user_1.login) is True:
                 continue
             break
 
-        user: User = UserCollection.create(cr_user=test_user_1)
+        user: User = UserFactory.create(cr_user=test_user_1)
         if User is not None:
             self.created_user.add(User)
 
@@ -40,15 +40,15 @@ class UserTest(unittest.TestCase):
         self.assertEqual(is_user_created, True)  # add assertion here
 
     def test_get_user(self):
-        user: User = UserCollection.get_user(self.TEST_USERS["test_user_1"].login)
+        user: User = UserFactory.get_user(self.TEST_USERS["test_user_1"].login)
         is_user_found = False if user is None else True
         self.assertEqual(is_user_found, True)  # add assertion here
 
     def test_join_to_unit(self):
         test_user_1 = self.TEST_USERS["test_user_1"]
         test_unit_1 = self.TEST_UNITS["test_unit_1"]
-        test_unit = UnitCollection.get_unit(test_unit_1.unit_id)
-        user = UserCollection.join_to_unit(test_user_1.login, test_unit)
+        test_unit = UnitFactory.get_unit(test_unit_1.unit_id)
+        user = UserFactory.join_to_unit(test_user_1.login, test_unit)
         is_joined = False
         for unit in user.units:
             if unit.unit_id == test_unit_1.unit_id:

@@ -1,7 +1,7 @@
 import unittest
-from models.org.unit import UnitCollection
-from models.org.db_schemas.unit import Unit
-from models.org.pydatic_schemas.schemas import UnitIn
+from models.org.unit import UnitFactory
+from models.org.db_schemas.db_unit import Unit
+from models.org.pydatic_schemas.user_model import UnitIn
 import datetime
 
 
@@ -12,18 +12,18 @@ class UnitTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         test_unit = cls.TEST_UNITS["test_unit_1"]
-        if UnitCollection.is_unit_exist(test_unit.unit_id) is False:
-            UnitCollection.create(test_unit)
+        if UnitFactory.is_unit_exist(test_unit.unit_id) is False:
+            UnitFactory.create(test_unit)
 
     def test_create_unit(self):
         test_unit = self.TEST_UNITS["test_unit_1"]
 
         while True:
             test_unit.unit_id = "test_unit_id{}".format(str(datetime.datetime.now().microsecond))
-            if UnitCollection.is_unit_exist(test_unit.unit_id) is True:
+            if UnitFactory.is_unit_exist(test_unit.unit_id) is True:
                 continue
             break
-        unit: Unit = UnitCollection.create(test_unit)
+        unit: Unit = UnitFactory.create(test_unit)
         is_created = False if unit is None else True
         self.assertEqual(is_created, True)
 
