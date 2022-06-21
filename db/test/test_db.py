@@ -1,5 +1,6 @@
 import unittest
-from models.db.db_conn import DBConn
+from db.db_conn import DBConn
+import db.setup_db as db_stup
 
 
 class DBTest(unittest.TestCase):
@@ -12,6 +13,11 @@ class DBTest(unittest.TestCase):
     def test_db_connect(self):
         db_connect = DBConn.db_connect()
         self.assertEqual(True, db_connect, db_connect)
+
+    def test_are_tables_created(self):
+        table_is_created = db_stup.get_table_exist_status()
+        for key, val in table_is_created.items():
+            self.assertTrue(val, msg=key)
 
 
 if __name__ == '__main__':

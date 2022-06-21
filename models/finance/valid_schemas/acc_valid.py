@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from sqlalchemy import Numeric
 
 
 class AccIn(BaseModel):

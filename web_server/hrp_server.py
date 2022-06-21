@@ -1,15 +1,9 @@
 from fastapi import FastAPI, status, HTTPException
-from models.org.user import UserFactory
-from models.org.db_schemas.db_user import User
-from models.org.unit import UnitFactory
-from models.org.db_schemas.db_unit import Unit
-from models.org.pydatic_schemas.user_model import UserIn, UserOut, UnitIn, UnitOut
-from models.org.pydatic_schemas.UnitUser import UserUnitIn, UserUnitOut, UnitUserOut
-from models.finance.account import AccountService
-from models.finance.valid_schemas.acc_valid import AccIn, AccOut
-
+from models.org import (UserFactory, User, UnitFactory, Unit, UserIn, UserOut,
+                        UnitIn, UnitOut, UserUnitIn, UserUnitOut, UnitUserOut)
+from models.finance import AccountService, AccIn, AccOut
+from models.finance import TrgCntIn, TrgCntOut, TargetCntService, TrgIn, TrgOut, TargetService
 from sqlalchemy.exc import NoResultFound
-
 from models.model_exceptions.ModelError import ModelError
 from typing import List
 
@@ -125,6 +119,73 @@ async def get_account(account_id: str):
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+
 """ """
 
+""" Target Center endpoint """
 
+
+@hrp_api.post("/units/{unit_id}/target_cnt",
+              status_code=status.HTTP_201_CREATED, response_model=TrgCntOut)
+async def create_target_cnt(trg_cnt: TrgCntIn):
+    try:
+        return TargetCntService.create(trg_cnt)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/target_cnt",
+             status_code=status.HTTP_200_OK, response_model=List[TrgCntOut])
+async def get_targets_cnt(skip: int = 0, limit: int = 100):
+    try:
+        return TargetCntService.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/target_cnt/{target_cnt_id}",
+             status_code=status.HTTP_200_OK, response_model=TrgCntOut)
+async def get_target_cnt(target_cnt_id: str):
+    try:
+        return TargetCntService.read(target_cnt_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+""" """
+
+""" Target endpoint """
+
+
+@hrp_api.post("/units/{unit_id}/target", status_code=status.HTTP_201_CREATED,
+              response_model=TrgOut)
+async def create_target(trg: TrgIn):
+    try:
+        return TargetService.create(trg)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/target", status_code=status.HTTP_200_OK,
+             response_model=List[TrgOut])
+async def get_targets(skip: int = 0, limit: int = 100):
+    try:
+        return TargetService.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/target/{target_cnt_id}", status_code=status.HTTP_200_OK,
+             response_model=TrgOut)
+async def get_target(target_id: str):
+    try:
+        return TargetService.read(target_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+""" """

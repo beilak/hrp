@@ -25,7 +25,7 @@ def setKeys(name, key, storage=None):
         storage = DEFAULT_STORAGE
     try:
         keyring.set_password(storage, name, key)
-    except:
+    except Exception:
         return False
     return True
 

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
-import models.db.key_tool as key_tool
-#import psycopg2 import OperationalError
+import db.key_tool as key_tool
+# import psycopg2 import OperationalError
 import sqlalchemy.exc
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm import declarative_base
@@ -17,7 +17,8 @@ class DBConn:
 
     @classmethod
     def _get_db_engine(cls, host, user, password):
-        return create_engine(DB_SYS+"+"+DRIVER+"://"+user+":"+password+"@"+host+"/" + DB, future=True, echo=False)
+        return create_engine(DB_SYS + "+" + DRIVER + "://" + user + ":" + password + "@" + host + "/" + DB, future=True,
+                             echo=False)
 
     @classmethod
     def get_db_connect(cls):
@@ -44,8 +45,12 @@ class DBConn:
         return session()
 
     @classmethod
+    def is_table_exist(cls, tb_name):
+        engine = cls.get_db_connect()
+        return engine.dialect.has_table(engine.connect(), tb_name)
+
+    @classmethod
     def insert(cls, tb_obj):
         with cls.get_new_session() as session:
             session.add_all(tb_obj)
             session.commit()
-

@@ -1,5 +1,5 @@
-from sqlalchemy import String, Column, ForeignKey, DateTime, func, Numeric
-from models.db.db_conn import Base
+from sqlalchemy import String, Column
+from db.db_conn import Base
 
 
 class AccType(Base):

@@ -1,7 +1,7 @@
 import unittest
 from models.org.unit import UnitFactory
 from models.org.db_schemas.db_unit import Unit
-from models.org.pydatic_schemas.user_model import UnitIn
+from models.org.valid_schemas.unit_valid import UnitIn
 import datetime
 
 

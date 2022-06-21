@@ -1,7 +1,7 @@
 import unittest
 from fastapi.testclient import TestClient
 from fastapi import status
-from web_server.hrp_server import hrp_api
+from web_server import hrp_api
 import datetime
 
 
@@ -106,6 +106,8 @@ class HRPWebServerTest(unittest.TestCase):
         response = self.client.get("/units/{}/users".format(self.TEST_UNIT))
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
 
+    """ { TEST Account"""
+
     def test_create_debit_acc(self):
         response = self.client.post("/units/" + self.TEST_UNIT + "/account",
                                     json={"acc_number": self.TEST_DEBIT_ACC1,
@@ -133,15 +135,88 @@ class HRPWebServerTest(unittest.TestCase):
         response_acc_id = response.json()['acc_id']
         self.assertIsNotNone(response_acc_id)
 
+    def test_get_accounts(self):
+        response = self.client.get("/units/{}/account".format(self.TEST_UNIT))
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
 
-def test_get_accounts(self):
-    # ToDo
-    self.assertTrue(False)
+    def __post_new_acc(self, unit, user, acc_type, description):
+        return self.client.post("/units/" + unit + "/account",
+                                json={"unit_id": unit,
+                                      "user_login": user,
+                                      "acc_type": acc_type,
+                                      "description": description,
+                                      "bank": "Тенькофф"})
 
+    def test_get_account(self):
+        response = self.__post_new_acc(self.TEST_UNIT, self.TEST_USER,
+                                       "CHASE", "description")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        acc_id = response.json()['acc_id']
 
-def get_accounts(self):
-    # ToDo
-    self.assertTrue(False)
+        response = self.client.get("/units/{}/account/{}".format(self.TEST_UNIT, acc_id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        response_acc_id = response.json()['acc_id']
+        self.assertEqual(response_acc_id, acc_id)
+
+    """ }"""
+
+    """ { TEST Target Center endpoint """
+
+    def __post_target_cnt(self, unit, account_id, init_value="100_000.00", init_currency="USD",
+                          name="Test target Name", description="description target cnt",
+                          value="100_000.00", currency="USD"):
+        return self.client.post("/units/" + unit + "/target_cnt",
+                                json={"unit_id": unit, "name": name, "description": description,
+                                      "account_id": account_id,
+                                      "value": value, "currency": currency,
+                                      "init_value": init_value, "init_currency": init_currency})
+
+    def test_create_target_cnt(self):
+        response = self.__post_new_acc(self.TEST_UNIT, self.TEST_USER,
+                                       "CHASE", "description")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        acc_id = response.json()['acc_id']
+        response = self.__post_target_cnt(unit=self.TEST_UNIT, account_id=acc_id)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        response_target_cnt_id = response.json()['target_cnt_id']
+        self.assertIsNotNone(response_target_cnt_id, msg=response.text)
+
+    def __prepare_target_cnt(self):
+        response = self.__post_new_acc(self.TEST_UNIT, self.TEST_USER,
+                                       "CHASE", "description")
+        acc_id = response.json()['acc_id']
+        response = self.__post_target_cnt(unit=self.TEST_UNIT, account_id=acc_id)
+        return response.json()['target_cnt_id'], self.TEST_UNIT
+
+    def test_get_targets_cnt(self):
+        target_cnt_id, unit_id = self.__prepare_target_cnt()
+        resource = self.client.get("/units/{}/target_cnt".format(unit_id))
+        self.assertEqual(resource.status_code, status.HTTP_200_OK, msg=resource.text)
+
+    def test_get_target_cnt(self):
+        target_cnt_id, unit_id = self.__prepare_target_cnt()
+        resource = self.client.get("/units/{}/target_cnt/{}".format(unit_id, target_cnt_id))
+        self.assertEqual(resource.status_code, status.HTTP_200_OK, msg=resource.text)
+        resource_trg_cnt_id = resource.json()["target_cnt_id"]
+        self.assertEqual(resource_trg_cnt_id, target_cnt_id, msg=resource.text)
+
+    """ } """
+
+    """ TEST Target endpoint """
+
+    def test_create_target(self):
+        # ToDo
+        self.assertIsNotNone(None)
+
+    def test_get_targets(self):
+        # ToDo
+        self.assertIsNotNone(None)
+
+    def test_get_target(self):
+        # ToDo
+        self.assertIsNotNone(None)
+
+    """ """
 
 
 if __name__ == '__main__':

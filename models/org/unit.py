@@ -1,9 +1,9 @@
 import os
 from sqlalchemy.sql import exists
-from models.db.db_conn import DBConn
+from db.db_conn import DBConn
 from models.model_exceptions.ModelError import ModelError
 from models.org.db_schemas.db_unit import Unit
-from models.org.pydatic_schemas.user_model import UnitIn
+from models.org.valid_schemas.unit_valid import UnitIn
 
 
 class UnitFactory:

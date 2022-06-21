@@ -1,8 +1,8 @@
 from sqlalchemy.sql import exists
-from models.db.db_conn import DBConn
+from db.db_conn import DBConn
 from models.model_exceptions.ModelError import ModelError
 from models.org.db_schemas.db_user import User
-from models.org.pydatic_schemas.user_model import UserIn
+from models.org.valid_schemas.user_valid import UserIn
 
 
 class UserFactory:

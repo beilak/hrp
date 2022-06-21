@@ -1,5 +1,5 @@
 from models.directory.acc_type import AccType
-from models.db.db_conn import DBConn
+from db.db_conn import DBConn
 import yaml
 
 

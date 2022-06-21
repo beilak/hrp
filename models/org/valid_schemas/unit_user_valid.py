@@ -2,7 +2,8 @@ from pydantic import BaseModel, validator
 
 from models.org.unit import UnitFactory
 from models.org.user import UserFactory
-from models.org.pydatic_schemas.user_model import UnitOut, UserOut
+from models.org.valid_schemas.user_valid import UserOut
+from models.org.valid_schemas.unit_valid import UnitOut
 from typing import List
 
 
@@ -10,12 +11,14 @@ class UserUnitIn(BaseModel):
     login: str
     unit_id: str
 
+    @classmethod
     @validator("login")
     def is_user_exist(cls, value):
         if UserFactory.is_user_exist(value) is False:
             raise ValueError("User didn't created yet")
         return value
 
+    @classmethod
     @validator("unit_id")
     def is_unit_exist(cls, value):
         if UnitFactory.is_unit_exist(value) is False:
