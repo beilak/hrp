@@ -97,7 +97,8 @@ async def get_unit_users(unit_id: str):
 @hrp_api.post("/units/{unit_id}/account", status_code=status.HTTP_201_CREATED, response_model=AccOut)
 async def create_account(acc: AccIn):
     try:
-        return AccountService.create(acc)
+        service = AccountService.build_service()
+        return service.create(acc)
     except Exception as error:
         raise HTTPException(status_code=409, detail=str(error))
 
@@ -105,7 +106,8 @@ async def create_account(acc: AccIn):
 @hrp_api.get("/units/{unit_id}/account", status_code=status.HTTP_200_OK, response_model=List[AccOut])
 async def get_accounts(skip: int = 0, limit: int = 100):
     try:
-        return AccountService.query(offset=skip, limit=limit)
+        service = AccountService.build_service()
+        return service.query(offset=skip, limit=limit)
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
@@ -113,7 +115,8 @@ async def get_accounts(skip: int = 0, limit: int = 100):
 @hrp_api.get("/units/{unit_id}/account/{account_id}", status_code=status.HTTP_200_OK, response_model=AccOut)
 async def get_account(account_id: str):
     try:
-        return AccountService.read(account_id)
+        service = AccountService.build_service()
+        return service.read(account_id)
     except NoResultFound as error:
         raise HTTPException(status_code=404, detail=str(error))
     except Exception as error:

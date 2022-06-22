@@ -18,3 +18,4 @@ class Account(Base):
     user_login = Column(User.user_login_type, ForeignKey("users.login"), nullable=False)
     cr_date = Column(DateTime(timezone=True), server_default=func.now())
     upd_date = Column(DateTime(timezone=True), onupdate=func.now())
+

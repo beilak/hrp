@@ -3,24 +3,28 @@ from db.db_conn import Base
 from pydantic import BaseModel
 from abc import ABC, abstractmethod
 from typing import List
+from models.main_tool import Specification
 
 
-class Factory(ABC):
+class Factory():
 
-    @abstractmethod
-    def __init__(self):
+    def __init__(self, specification: Specification):
+        self.specification = specification
+        '''
         self.DB_class = Base
         # self.valid_out_class = BaseModel
         self.id_field = ""
+        '''
 
     def create_entity(self, obj):
         with DBConn.get_new_session() as session:
             session.add(obj)
             session.flush()
-            obj_id = getattr(obj, self.id_field)
+            obj_id = getattr(obj, self.specification.id_field)
             session.commit()
-        return self.get_obj(obj_id)  # self.valid_out_class(**self.get_obj(obj_id).__dict__)
+        return obj_id
 
+    '''
     def get_entity(self, obj_id):
         return self.get_obj(obj_id)  # self.valid_out_class(**self.get_obj(obj_id).__dict__)
 
@@ -47,3 +51,5 @@ class Factory(ABC):
     @abstractmethod
     def get_obj(self, obj_id):
         pass
+    '''
+

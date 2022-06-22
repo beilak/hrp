@@ -1,6 +1,6 @@
 import unittest
 from db.db_conn import DBConn
-import db.setup_db as db_stup
+import setup.setup_db as db_stup
 
 
 class DBTest(unittest.TestCase):

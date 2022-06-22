@@ -3,7 +3,7 @@ from sqlalchemy.orm import composite
 from db.db_conn import Base
 from models.org.unit import Unit
 from sqlalchemy_utils.types.currency import CurrencyType
-from models.finance.account import Account
+from models.finance.account.account_factory import Account
 from models.directory.money_currency import Money
 
 
