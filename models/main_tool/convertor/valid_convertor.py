@@ -1,6 +1,8 @@
-from db.db_conn import Base
 from abc import ABC, abstractmethod
+
 from sqlalchemy_utils.types.currency import Currency
+
+from db.db_conn import Base
 
 
 class Convertor:

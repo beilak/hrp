@@ -1,8 +1,9 @@
-import unittest
-from models.org.unit import UnitFactory
-from models.org.db_schemas.db_unit import Unit
-from models.org.valid_schemas.unit_valid import UnitIn
 import datetime
+import unittest
+
+from models.org.db_schemas.db_unit import Unit
+from models.org.unit import UnitFactory
+from models.org.valid_schemas.unit_valid import UnitIn
 
 
 class UnitTest(unittest.TestCase):

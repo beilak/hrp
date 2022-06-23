@@ -1,9 +1,5 @@
 from db.db_conn import DBConn
-from db.db_conn import Base
-from pydantic import BaseModel
-from abc import ABC, abstractmethod
-from typing import List
-from models.main_tool import Specification
+from models.main_tool.specification import Specification
 
 
 class Factory():

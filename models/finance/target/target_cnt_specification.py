@@ -1,5 +1,5 @@
-from models.main_tool import Specification
-from models.finance import TargetCnt
+from models.finance.db_schemas.db_target_cnt import TargetCnt
+from models.main_tool.specification import Specification
 
 
 class TargetCntSpecification(Specification):

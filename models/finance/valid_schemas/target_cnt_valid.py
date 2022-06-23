@@ -1,7 +1,6 @@
-from pydantic import BaseModel
-from models.directory.money_currency import Money
 from decimal import Decimal
-from sqlalchemy_utils import CurrencyType, Currency
+
+from pydantic import BaseModel
 
 
 class TrgCntIn(BaseModel):

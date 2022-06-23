@@ -1,10 +1,15 @@
 from db.db_conn import DBConn, Base
 import models.org as org
-import models.finance as finance
+import models.finance.db_schemas as finance_db
+
+"""
+Setup database tables. (Create/Delete)
+"""
 
 
 def get_table_exist_status():
-    tb_obj = {org.User, org.Unit, org.UnitUser, finance.Target, finance.Account, finance.TargetCnt}
+    tb_obj = {org.User, org.Unit, org.UnitUser, finance_db.Account,
+              finance_db.TargetCnt, finance_db.Target, finance_db.ProfitCnt, finance_db.Profit}
     result = dict()
     for obj in tb_obj:
         result[obj] = DBConn.is_table_exist(obj.__tablename__)

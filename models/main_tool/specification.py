@@ -21,5 +21,3 @@ class Specification(ABC):
     def get_specification(cls):
         db_class = None
         return cls(db_class)
-
-

@@ -1,7 +1,8 @@
-from models.main_tool import Accessor
-from db.db_conn import DBConn
 from sqlalchemy.sql import exists
-from models.finance import Account
+
+from db.db_conn import DBConn
+from models.finance.db_schemas.db_account import Account
+from models.main_tool.accessor import Accessor
 
 
 class AccountAccessor(Accessor):

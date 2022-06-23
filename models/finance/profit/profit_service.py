@@ -1,26 +1,25 @@
-from models.finance.db_schemas.db_target import Target
-from models.finance.target.target_accessor import TargetAccessor
-from models.finance.target.target_factory import TargetFactory
-from models.finance.target.target_specification import TargetSpecification
-from models.finance.valid_schemas.target_valid import TrgOut
+from models.finance.db_schemas.db_profit import Profit
+from models.finance.profit.profit_accessor import ProfitAccessor
+from models.finance.profit.profit_factory import ProfitFactory
+from models.finance.profit.profit_specification import ProfitSpecification
+from models.finance.valid_schemas.profit_valid import ProfitOut
 from models.main_tool.convertor.valid_convertor import (Convertor, ValidOutConvertor, BaseConvertor,
                                                         CurrencyInConvertor, CurrencyOutConvertor)
 from models.main_tool.service import Service
 
 
-class TargetService(Service):
+class ProfitService(Service):
 
     @classmethod
     def build_service(cls):
         service = cls()
-        specific = TargetSpecification.get_specification()
-        service.factory = TargetFactory(specific)
-        service.obj_access = TargetAccessor(specific)
-        valid_out = ValidOutConvertor(TrgOut,
+        specific = ProfitSpecification.get_specification()
+        service.factory = ProfitFactory(specific)
+        service.obj_access = ProfitAccessor(specific)
+        valid_out = ValidOutConvertor(ProfitOut,
                                       fields_covert=[CurrencyOutConvertor("currency")])
         service.out_convertor = Convertor(valid_out)
-        base_conv = BaseConvertor(Target,
+        base_conv = BaseConvertor(Profit,
                                   fields_covert=[CurrencyInConvertor("currency")])
         service.base_convertor = Convertor(base_conv)
-
         return service

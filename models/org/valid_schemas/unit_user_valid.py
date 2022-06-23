@@ -1,10 +1,11 @@
+from typing import List
+
 from pydantic import BaseModel, validator
 
 from models.org.unit import UnitFactory
 from models.org.user import UserFactory
-from models.org.valid_schemas.user_valid import UserOut
 from models.org.valid_schemas.unit_valid import UnitOut
-from typing import List
+from models.org.valid_schemas.user_valid import UserOut
 
 
 class UserUnitIn(BaseModel):

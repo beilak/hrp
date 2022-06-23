@@ -1,10 +1,11 @@
 from sqlalchemy import String, Column, ForeignKey, DateTime, func, Numeric, Integer
 from sqlalchemy.orm import composite
-from db.db_conn import Base
-from models.org.unit import Unit
 from sqlalchemy_utils.types.currency import CurrencyType
-from models.finance.account.account_factory import Account
+
+from db.db_conn import Base
 from models.directory.money_currency import Money
+from models.finance.db_schemas.db_account import Account
+from models.org.unit import Unit
 
 
 class TargetCnt(Base):

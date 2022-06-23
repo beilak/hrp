@@ -1,4 +1,5 @@
 from sqlalchemy.sql import exists
+
 from db.db_conn import DBConn
 from models.model_exceptions.ModelError import ModelError
 from models.org.db_schemas.db_user import User

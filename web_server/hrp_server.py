@@ -1,14 +1,14 @@
 from fastapi import FastAPI, status, HTTPException
 from models.org import (UserFactory, User, UnitFactory, Unit, UserIn, UserOut,
                         UnitIn, UnitOut, UserUnitIn, UserUnitOut, UnitUserOut)
-from models.finance import AccIn, AccOut
-from models.finance import TrgCntIn, TrgCntOut, TrgIn, TrgOut
+
 from sqlalchemy.exc import NoResultFound
 from models.model_exceptions.ModelError import ModelError
 from typing import List
 
-from models import AccountService
-from models import TargetCntService, TargetService
+from models import AccountService, AccIn, AccOut
+from models import TargetCntService, TargetService, TrgCntIn, TrgCntOut, TrgIn, TrgOut
+from models import ProfitCntService, ProfitService, ProfitCntIn, ProfitCntOut, ProfitIn, ProfitOut
 
 hrp_api = FastAPI()
 
@@ -201,3 +201,38 @@ async def get_target(target_id: str):
 
 
 """ """
+
+
+""" Profit Center endpoint """
+
+
+@hrp_api.post("/units/{unit_id}/profit_cnt",
+              status_code=status.HTTP_201_CREATED, response_model=ProfitCntOut)
+async def create_profit_cnt(profit_cnt: ProfitCntIn):
+    try:
+        service = ProfitCntService.build_service()
+        return service.create(profit_cnt)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/profit_cnt",
+             status_code=status.HTTP_200_OK, response_model=List[ProfitCntOut])
+async def get_profits_cnt(skip: int = 0, limit: int = 100):
+    try:
+        service = ProfitCntService.build_service()
+        return service.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/profit_cnt/{profit_cnt_id}",
+             status_code=status.HTTP_200_OK, response_model=ProfitCntOut)
+async def get_profit_cnt(profit_cnt_id: str):
+    try:
+        service = ProfitCntService.build_service()
+        return service.read(profit_cnt_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))

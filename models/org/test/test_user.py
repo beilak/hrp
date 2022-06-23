@@ -1,10 +1,11 @@
-import unittest
-from models.org.user import UserFactory
-from models.org.db_schemas.db_user import User
-from models.org.valid_schemas.user_valid import UserIn
-from models.org.valid_schemas.unit_valid import UnitIn
-from models.org.unit import UnitFactory
 import datetime
+import unittest
+
+from models.org.db_schemas.db_user import User
+from models.org.unit import UnitFactory
+from models.org.user import UserFactory
+from models.org.valid_schemas.unit_valid import UnitIn
+from models.org.valid_schemas.user_valid import UserIn
 
 
 class UserTest(unittest.TestCase):

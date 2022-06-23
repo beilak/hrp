@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, DateTime, func
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import PasswordType, EmailType
+
 from db.db_conn import Base
 from models.org.db_schemas.db_unit_user import UnitUser
 

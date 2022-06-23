@@ -1,17 +1,17 @@
 from sqlalchemy.sql import exists
 
 from db.db_conn import DBConn
-from models.finance.db_schemas.db_target_cnt import TargetCnt
+from models.finance.db_schemas.db_profit_cnt import ProfitCnt
 from models.main_tool.accessor import Accessor
 
 
-class TargetCntAccessor(Accessor):
+class ProfitCntAccessor(Accessor):
     def is_exist(self, obj_id):
         with DBConn.get_new_session() as session:
-            return session.query(exists().where(TargetCnt.target_cnt_id
+            return session.query(exists().where(ProfitCnt.profit_cnt_id
                                                 == obj_id)).scalar()
 
-    def get_obj(self, obj_id) -> TargetCnt:
+    def get_obj(self, obj_id) -> ProfitCnt:
         with DBConn.get_new_session() as session:
-            return session.query(TargetCnt).filter(TargetCnt.target_cnt_id
+            return session.query(ProfitCnt).filter(ProfitCnt.profit_cnt_id
                                                    == obj_id).one()

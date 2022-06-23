@@ -1,5 +1,5 @@
-from models.main_tool import Specification
-from models.finance import Target
+from models.finance.db_schemas.db_target import Target
+from models.main_tool.service import Specification
 
 
 class TargetSpecification(Specification):

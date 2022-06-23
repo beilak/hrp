@@ -1,7 +1,8 @@
 import unittest
 from decimal import Decimal
-from models.finance.valid_schemas.target_valid import TrgIn, TrgOut
+
 from models import TargetService
+from models.finance.valid_schemas.target_valid import TrgIn, TrgOut
 
 
 class TargetTest(unittest.TestCase):

@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
-from models.main_tool import Specification
 from typing import List
+
 from db.db_conn import DBConn
+from models.main_tool.specification import Specification
+
+
 # from .singleton import Singleton
 
 

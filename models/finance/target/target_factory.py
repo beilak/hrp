@@ -1,4 +1,4 @@
-from models.main_tool import Factory
+from models.main_tool.factory import Factory
 
 
 class TargetFactory(Factory):
