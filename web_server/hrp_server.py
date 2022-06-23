@@ -83,7 +83,8 @@ async def user_join_to_unit(join: UserUnitIn):
     return UserUnitOut(login=user.login, units=units)
 
 
-@hrp_api.get("/units/{unit_id}/users", status_code=status.HTTP_200_OK,
+@hrp_api.get("/units/{unit_id}/users",
+             status_code=status.HTTP_200_OK,
              response_model=UnitUserOut)
 async def get_unit_users(unit_id: str):
     try:
@@ -97,7 +98,9 @@ async def get_unit_users(unit_id: str):
 """ Account endpoint """
 
 
-@hrp_api.post("/units/{unit_id}/account", status_code=status.HTTP_201_CREATED, response_model=AccOut)
+@hrp_api.post("/units/{unit_id}/account",
+              status_code=status.HTTP_201_CREATED,
+              response_model=AccOut)
 async def create_account(acc: AccIn):
     try:
         service = AccountService.build_service()
@@ -207,7 +210,8 @@ async def get_target(target_id: str):
 
 
 @hrp_api.post("/units/{unit_id}/profit_cnt",
-              status_code=status.HTTP_201_CREATED, response_model=ProfitCntOut)
+              status_code=status.HTTP_201_CREATED,
+              response_model=ProfitCntOut)
 async def create_profit_cnt(profit_cnt: ProfitCntIn):
     try:
         service = ProfitCntService.build_service()
@@ -244,7 +248,8 @@ async def get_profit_cnt(profit_cnt_id: str):
 
 
 @hrp_api.post("/units/{unit_id}/profit",
-              status_code=status.HTTP_201_CREATED, response_model=ProfitOut)
+              status_code=status.HTTP_201_CREATED,
+              response_model=ProfitOut)
 async def create_profit(profit: ProfitIn):
     try:
         service = ProfitService.build_service()

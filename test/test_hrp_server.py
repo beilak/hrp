@@ -15,7 +15,8 @@ class HRPWebServerTest(unittest.TestCase):
         cls.TEST_USER = test_user
         test_unit = "test_unit_id_1"
         cls.TEST_UNIT = test_unit
-        cls.TEST_DEBIT_ACC1 = "010203040506070809"
+        test_debit_number = "010203040506070809"
+        cls.TEST_DEBIT_ACC_NUMBER = "010203040506070809"
         client = TestClient(hrp_api)
         cls.client = client
 
@@ -30,6 +31,17 @@ class HRPWebServerTest(unittest.TestCase):
         client.put("/users/{}/join_to_unit".format(test_user),
                    json={"login": test_user,
                          "unit_id": test_unit})
+
+        response = client.post("/units/" + test_unit + "/account",
+                               json={"acc_number": test_debit_number,
+                                     "unit_id": test_unit,
+                                     "user_login": test_user,
+                                     "acc_type": "DEBIT_CARD",
+                                     "description": "",
+                                     "bank": ""})
+        if 'acc_id' in response.json():
+            test_acc_id = response.json()['acc_id']
+            cls.TEST_ACC_ID = int(test_acc_id)
 
     def test_get_users(self):
         response = self.client.get("/users/")
@@ -112,7 +124,7 @@ class HRPWebServerTest(unittest.TestCase):
 
     def test_create_debit_acc(self):
         response = self.client.post("/units/" + self.TEST_UNIT + "/account",
-                                    json={"acc_number": self.TEST_DEBIT_ACC1,
+                                    json={"acc_number": self.TEST_DEBIT_ACC_NUMBER,
                                           "unit_id": self.TEST_UNIT,
                                           "user_login": self.TEST_USER,
                                           "acc_type": "DEBIT_CARD",
@@ -120,7 +132,7 @@ class HRPWebServerTest(unittest.TestCase):
                                           "bank": "Тенькофф"})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
         response_acc_num = response.json()['acc_number']
-        self.assertEqual(response_acc_num, self.TEST_DEBIT_ACC1)
+        self.assertEqual(response_acc_num, self.TEST_DEBIT_ACC_NUMBER)
         response_acc_id = response.json()['acc_id']
         self.assertIsNotNone(response_acc_id)
 
@@ -259,6 +271,98 @@ class HRPWebServerTest(unittest.TestCase):
         self.assertTrue(is_test_trg_got, msg=response.text)
 
     """ """
+    def __create_profit_cnt(self, unit, user, acc_id):
+        link = "/units/{}/profit_cnt".format(unit)
+        return self.client.post(link,
+                                json={"unit_id": unit,
+                                      "name": user,
+                                      "description": "desc",
+                                      "account_id": acc_id,
+                                      "currency": "RUB"})
+
+    def test_create_profit_cnt(self):
+        response = self.__create_profit_cnt(self.TEST_UNIT, self.TEST_USER,
+                                            self.TEST_ACC_ID)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        profit_cnt_id = response.json()['profit_cnt_id']
+        self.assertIsNotNone(profit_cnt_id, msg=response.text)
+
+    def __prepare_read_profit_cnt(self):
+        response = self.__create_profit_cnt(self.TEST_UNIT, self.TEST_USER,
+                                            self.TEST_ACC_ID)
+        profit_cnt_id = response.json()['profit_cnt_id']
+        return self.TEST_UNIT, profit_cnt_id
+
+    def test_get_profit_cnt(self):
+        unit, profit_cnt_id = self.__prepare_read_profit_cnt()
+        link = "/units/{}/profit_cnt/{}".format(unit, profit_cnt_id)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        resp_profit_cnt_id = response.json()['profit_cnt_id']
+        self.assertEqual(resp_profit_cnt_id, profit_cnt_id, msg=response.text)
+
+    def test_get_profits_cnt(self):
+        unit, profit_cnt_id = self.__prepare_read_profit_cnt()
+        link = "/units/{}/profit_cnt".format(unit)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        is_profit_cnt_got = False
+        for i in response.json():
+            if profit_cnt_id == i['profit_cnt_id']:
+                is_profit_cnt_got = True
+        self.assertTrue(is_profit_cnt_got, msg=response.text)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    """ """
+    def __create_profit(self, unit, profit_cnt_id, user):
+        link = "/units/{}/profit".format(unit)
+        return self.client.post(link,
+                                json={"profit_cnt_id": profit_cnt_id, "user_login": user,
+                                      "value": "100.00", "currency": "RUB"})
+
+    def test_create_profit(self):
+        unit, profit_cnt_id = self.__prepare_read_profit_cnt()
+        response = self.__create_profit(unit, profit_cnt_id, self.TEST_USER)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        profit_id = response.json()['profit_id']
+        self.assertIsNotNone(profit_id, msg=response.text)
+
+    def __prepare_read_profit(self):
+        unit, profit_cnt_id = self.__prepare_read_profit_cnt()
+        response = self.__create_profit(unit, profit_cnt_id, self.TEST_USER)
+        profit_id = response.json()['profit_id']
+        return unit, profit_id
+
+    def test_get_profit(self):
+        unit, profit_id = self.__prepare_read_profit()
+
+        link = "/units/{}/profit/{}".format(unit, profit_id)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        resp_profit_id = response.json()['profit_id']
+        self.assertEqual(resp_profit_id, profit_id, msg=response.text)
+
+    def test_get_profits(self):
+        unit, profit_id = self.__prepare_read_profit()
+        link = "/units/{}/profit".format(unit)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        is_profit_got = False
+        for i in response.json():
+            if profit_id == i['profit_id']:
+                is_profit_got = True
+        self.assertTrue(is_profit_got, msg=response.text)
 
 
 if __name__ == '__main__':
