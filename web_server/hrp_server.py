@@ -236,3 +236,41 @@ async def get_profit_cnt(profit_cnt_id: str):
         raise HTTPException(status_code=404, detail=str(error))
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
+
+""" """
+
+
+""" Profit  endpoint """
+
+
+@hrp_api.post("/units/{unit_id}/profit",
+              status_code=status.HTTP_201_CREATED, response_model=ProfitOut)
+async def create_profit(profit: ProfitIn):
+    try:
+        service = ProfitService.build_service()
+        return service.create(profit)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/profit",
+             status_code=status.HTTP_200_OK, response_model=List[ProfitOut])
+async def get_profits(skip: int = 0, limit: int = 100):
+    try:
+        service = ProfitService.build_service()
+        return service.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/profit/{profit_id}",
+             status_code=status.HTTP_200_OK, response_model=ProfitOut)
+async def get_profit(profit_id: str):
+    try:
+        service = ProfitService.build_service()
+        return service.read(profit_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
