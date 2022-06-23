@@ -16,10 +16,10 @@ class Specification(ABC):
     def id_field(self):
         return self._id_field
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def get_specification():
+    def get_specification(cls):
         db_class = None
-        return Specification(db_class)
+        return cls(db_class)
 
 

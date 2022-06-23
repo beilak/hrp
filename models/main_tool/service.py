@@ -1,7 +1,7 @@
 from models.main_tool.abstract_crud import CRUD
 from typing import List
 from .accessor import Accessor
-from .valid_convertor import Convertor, ValidOutConvertor, BaseConvertor
+from models.main_tool.convertor.valid_convertor import Convertor, ValidOutConvertor, BaseConvertor
 from abc import abstractmethod
 from .specification import Specification
 from pydantic import BaseModel

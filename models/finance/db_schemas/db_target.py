@@ -10,8 +10,10 @@ from models.directory.money_currency import Money
 class Target(Base):
     __tablename__ = "targets"
     target_id_type = Integer()
-    target_id = Column(target_id_type, primary_key=True, autoincrement=True)
-    target_cnt_id = Column(TargetCnt.target_cnt_id_type, ForeignKey(TargetCnt.target_cnt_id))
+    target_id = Column(target_id_type, primary_key=True,
+                       autoincrement=True)
+    target_cnt_id = Column(TargetCnt.target_cnt_id_type,
+                           ForeignKey(TargetCnt.target_cnt_id))
     user_login = Column(User.user_login_type, ForeignKey(User.login))
     value = Column(Numeric(precision=8))
     currency = Column(CurrencyType)

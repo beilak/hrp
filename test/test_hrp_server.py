@@ -4,6 +4,8 @@ from fastapi import status
 from web_server import hrp_api
 import datetime
 
+# ToDo Optimize test (reformat prepare to test)
+
 
 class HRPWebServerTest(unittest.TestCase):
 
@@ -204,17 +206,57 @@ class HRPWebServerTest(unittest.TestCase):
 
     """ TEST Target endpoint """
 
-    def test_create_target(self):
-        # ToDo
-        self.assertIsNotNone(None)
+    def __prepare_target_crt_test(self):
+        response = self.__post_new_acc(self.TEST_UNIT, self.TEST_USER,
+                                       "CHASE", "description")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        acc_id = response.json()['acc_id']
+        response = self.__post_target_cnt(unit=self.TEST_UNIT, account_id=acc_id)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        response_target_cnt_id = response.json()['target_cnt_id']
+        self.assertIsNotNone(response_target_cnt_id, msg=response.text)
+        return self.TEST_UNIT, self.TEST_USER, acc_id, response_target_cnt_id
 
-    def test_get_targets(self):
-        # ToDo
-        self.assertIsNotNone(None)
+    def __create_target(self, unit, target_cnt_id, user):
+        link = "/units/{}/target".format(unit)
+        return self.client.post(link,
+                                json={"target_cnt_id": target_cnt_id,
+                                      "user_login": user,
+                                      "value": "100.00",
+                                      "currency": "RUB"})
+
+    def test_create_target(self):
+        unit, user, acc_id, target_cnt_id = self.__prepare_target_crt_test()
+        response = self.__create_target(unit, target_cnt_id, user)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        response_target_id = response.json()['target_id']
+        self.assertIsNotNone(response_target_id, msg=response.text)
+
+    def __prepare_read_target(self):
+        unit, user, acc_id, target_cnt_id = self.__prepare_target_crt_test()
+        response = self.__create_target(unit, target_cnt_id, user)
+        target_id = response.json()['target_id']
+        return unit, target_id
 
     def test_get_target(self):
-        # ToDo
-        self.assertIsNotNone(None)
+        unit, target_id = self.__prepare_read_target()
+        link = "/units/{}/target/{}".format(unit, target_id)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        resp_target_id = response.json()['target_id']
+        self.assertEqual(resp_target_id, target_id, msg=response.text)
+
+    def test_get_targets(self):
+        unit, target_id = self.__prepare_read_target()
+        link = "/units/{}/target".format(unit)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK,
+                         msg=response.text)
+        is_test_trg_got = False
+        for i in response.json():
+            if i["target_id"] == target_id:
+                is_test_trg_got = True
+        self.assertTrue(is_test_trg_got, msg=response.text)
 
     """ """
 
