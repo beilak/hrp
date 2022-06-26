@@ -377,7 +377,7 @@ class HRPWebServerTest(unittest.TestCase):
         real_estate_id = response.json()['real_estate_id']
         return self.TEST_UNIT, real_estate_id
 
-    def test_get_read_real(self):
+    def test_get_read_real_estate(self):
         unit, real_estate_id = self.__prepare_read_real_estate()
 
         link = "/units/{}/real_estate/{}".format(unit, real_estate_id)
@@ -386,7 +386,7 @@ class HRPWebServerTest(unittest.TestCase):
         resp_real_estate_id = response.json()['real_estate_id']
         self.assertEqual(resp_real_estate_id, real_estate_id, msg=response.text)
 
-    def test_get_read_reals(self):
+    def test_get_read_real_estates(self):
         unit, real_estate_id = self.__prepare_read_real_estate()
         link = "/units/{}/real_estate".format(unit)
         response = self.client.get(link)
@@ -399,6 +399,56 @@ class HRPWebServerTest(unittest.TestCase):
 
     """ } """
 
+    """
+    { Test Asset
+    """
+
+    def __create_asset(self, unit, user, name="Test name of asset", count=1, measure="cnt",
+                       city="Moscow", address="Lenina 1", price="10_000_000.00", currency="RUB"):
+        link = "/units/{}/asset".format(unit)
+        return self.client.post(link,
+                                json={"name": name, "unit_id": unit, "user_login": user,
+                                      "count": count, "measure": measure,
+                                      "city": city, "address": address,
+                                      "price": price, "currency": currency})
+
+    def test_create_asset(self):
+        response = self.__create_asset(self.TEST_UNIT, self.TEST_USER)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        asset_id = response.json()['asset_id']
+        self.assertIsNotNone(asset_id, msg=response.text)
+
+    def __prepare_read_asset(self):
+        response = self.__create_asset(self.TEST_UNIT, self.TEST_USER)
+        asset_id = response.json()['asset_id']
+        return self.TEST_UNIT, asset_id
+
+    def test_get_read_asset(self):
+        unit, asset_id = self.__prepare_read_asset()
+
+        link = "/units/{}/asset/{}".format(unit, asset_id)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        resp_asset_id = response.json()['asset_id']
+        self.assertEqual(resp_asset_id, asset_id, msg=response.text)
+
+    def test_get_read_assets(self):
+        unit, asset_id = self.__prepare_read_asset()
+        link = "/units/{}/asset".format(unit)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        is_asset_got = False
+        for i in response.json():
+            if asset_id == i['asset_id']:
+                is_asset_got = True
+        self.assertTrue(is_asset_got, msg=response.text)
+
+    """ } """
+
+
+def run_hrp_server_test():
+    HRPWebServerTest().run()
+
 
 if __name__ == '__main__':
-    unittest.main()
+    run_hrp_server_test()

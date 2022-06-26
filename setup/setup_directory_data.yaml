@@ -7,3 +7,13 @@ acc_types:
     name: "Bank account"
 - BROKERAGE_ACCOUNT:
     name: "Brokerage account"
+
+measures:
+    - cnt:
+        name: "Шт."
+    - litre:
+        name: "Литр"
+    - kg:
+        name: "Кг."
+    - gr:
+        name: "Грамм"

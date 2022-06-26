@@ -13,6 +13,7 @@ from models import ProfitCntService, ProfitService, ProfitCntIn, ProfitCntOut, P
 
 # Material
 from models import RealEstateService, RealEstateIn, RealEstateOut
+from models import AssetService, AssetIn, AssetOut
 
 hrp_api = FastAPI()
 
@@ -313,6 +314,43 @@ async def get_real_estate(real_estate_id: str):
     try:
         service = RealEstateService.build_service()
         return service.read(real_estate_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+""" """
+
+""" Assert endpoint """
+
+
+@hrp_api.post("/units/{unit_id}/asset",
+              status_code=status.HTTP_201_CREATED, response_model=AssetOut)
+async def create_asset(asset: AssetIn):
+    try:
+        service = AssetService.build_service()
+        return service.create(asset)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/asset",
+             status_code=status.HTTP_200_OK, response_model=List[AssetOut])
+async def get_assets(skip: int = 0, limit: int = 100):
+    try:
+        service = AssetService.build_service()
+        return service.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/asset/{asset_id}",
+             status_code=status.HTTP_200_OK, response_model=AssetOut)
+async def get_asset(asset_id: str):
+    try:
+        service = AssetService.build_service()
+        return service.read(asset_id)
     except NoResultFound as error:
         raise HTTPException(status_code=404, detail=str(error))
     except Exception as error:

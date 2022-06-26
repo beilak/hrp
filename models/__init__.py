@@ -12,6 +12,11 @@ from models.finance.target.target_cnt_service import TargetCntService
 from models.finance.target.target_service import TargetService
 from models.finance.valid_schemas.target_valid import TrgIn, TrgOut
 from models.finance.valid_schemas.target_cnt_valid import TrgCntIn, TrgCntOut
+
 # Material
+# Real Estate
 from models.material.real_estate.real_estate_service import RealEstateService
-from models.material.valid_schemas.real_estate_valid import RealEstateIn, RealEstateOut
+from models.material.valid_schemas import RealEstateIn, RealEstateOut
+# Asset
+from models.material.asset.asset_service import AssetService
+from models.material.valid_schemas import AssetIn, AssetOut

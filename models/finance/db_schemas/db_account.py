@@ -1,7 +1,7 @@
 from sqlalchemy import String, Column, ForeignKey, DateTime, func, Integer
 
 from db.db_conn import Base
-from models.directory.acc_type import AccType
+from models.directory.db_acc_type import AccType
 from models.org.unit import Unit
 from models.org.user import User
 

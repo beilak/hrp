@@ -2,14 +2,15 @@ from db.db_conn import DBConn, Base
 import models.org as org
 import models.finance.db_schemas as finance_db
 import models.material.db_schemas as material_db
-
+import models.directory as directory_db
 """
 Setup database tables. (Create/Delete)
 """
 
 
 def get_table_exist_status():
-    tb_obj = {org.User, org.Unit, org.UnitUser, finance_db.Account,
+    tb_obj = {directory_db.AccType, directory_db.Measure,
+              org.User, org.Unit, org.UnitUser, finance_db.Account,
               finance_db.TargetCnt, finance_db.Target, finance_db.ProfitCnt, finance_db.Profit,
               material_db.RealEstate}
     result = dict()
