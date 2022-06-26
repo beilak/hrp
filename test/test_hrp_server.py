@@ -312,7 +312,9 @@ class HRPWebServerTest(unittest.TestCase):
                 is_profit_cnt_got = True
         self.assertTrue(is_profit_cnt_got, msg=response.text)
 
-    """ """
+    """
+    { Test Profit
+    """
     def __create_profit(self, unit, profit_cnt_id, user):
         link = "/units/{}/profit".format(unit)
         return self.client.post(link,
@@ -351,6 +353,51 @@ class HRPWebServerTest(unittest.TestCase):
             if profit_id == i['profit_id']:
                 is_profit_got = True
         self.assertTrue(is_profit_got, msg=response.text)
+    """ } """
+
+    """
+    { Test Real_estate
+    """
+
+    def __create_real_estate(self, unit, user, name="Test name of Real Estate", city="Moscow"):
+        link = "/units/{}/real_estate".format(unit)
+        return self.client.post(link,
+                                json={"name": name, "unit_id": unit, "user_login": user,
+                                      "city": city, "address": "Lenina 1",
+                                      "price": "10_000_000.00", "currency": "RUB"})
+
+    def test_create_real_estate(self):
+        response = self.__create_real_estate(self.TEST_UNIT, self.TEST_USER)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.text)
+        real_estate_id = response.json()['real_estate_id']
+        self.assertIsNotNone(real_estate_id, msg=response.text)
+
+    def __prepare_read_real_estate(self):
+        response = self.__create_real_estate(self.TEST_UNIT, self.TEST_USER)
+        real_estate_id = response.json()['real_estate_id']
+        return self.TEST_UNIT, real_estate_id
+
+    def test_get_read_real(self):
+        unit, real_estate_id = self.__prepare_read_real_estate()
+
+        link = "/units/{}/real_estate/{}".format(unit, real_estate_id)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        resp_real_estate_id = response.json()['real_estate_id']
+        self.assertEqual(resp_real_estate_id, real_estate_id, msg=response.text)
+
+    def test_get_read_reals(self):
+        unit, real_estate_id = self.__prepare_read_real_estate()
+        link = "/units/{}/real_estate".format(unit)
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.text)
+        is_real_estate_got = False
+        for i in response.json():
+            if real_estate_id == i['real_estate_id']:
+                is_real_estate_got = True
+        self.assertTrue(is_real_estate_got, msg=response.text)
+
+    """ } """
 
 
 if __name__ == '__main__':

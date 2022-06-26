@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from decimal import Decimal
 
 
 class RealEstateIn(BaseModel):
@@ -7,7 +8,7 @@ class RealEstateIn(BaseModel):
     user_login: str
     city: str | None
     address: str | None
-    price: str | None
+    price: Decimal | None
     currency: str | None
 
 
@@ -18,5 +19,5 @@ class RealEstateOut(BaseModel):
     user_login: str
     city: str | None
     address: str | None
-    price: str | None
+    price: Decimal | None
     currency: str | None
