@@ -312,18 +312,6 @@ class HRPWebServerTest(unittest.TestCase):
                 is_profit_cnt_got = True
         self.assertTrue(is_profit_cnt_got, msg=response.text)
 
-
-
-
-
-
-
-
-
-
-
-
-
     """ """
     def __create_profit(self, unit, profit_cnt_id, user):
         link = "/units/{}/profit".format(unit)

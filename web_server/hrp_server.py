@@ -6,9 +6,13 @@ from sqlalchemy.exc import NoResultFound
 from models.model_exceptions.ModelError import ModelError
 from typing import List
 
+# Finance
 from models import AccountService, AccIn, AccOut
 from models import TargetCntService, TargetService, TrgCntIn, TrgCntOut, TrgIn, TrgOut
 from models import ProfitCntService, ProfitService, ProfitCntIn, ProfitCntOut, ProfitIn, ProfitOut
+
+# Material
+from models import RealEstateService, RealEstateIn, RealEstateOut
 
 hrp_api = FastAPI()
 
@@ -279,3 +283,40 @@ async def get_profit(profit_id: str):
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+
+""" Real Estate  endpoint """
+
+
+@hrp_api.post("/units/{unit_id}/real_estate",
+              status_code=status.HTTP_201_CREATED, response_model=RealEstateOut)
+async def create_real_estate(real_estate: RealEstateIn):
+    try:
+        service = RealEstateService.build_service()
+        return service.create(real_estate)
+    except Exception as error:
+        raise HTTPException(status_code=409, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/real_estate",
+             status_code=status.HTTP_200_OK, response_model=List[RealEstateOut])
+async def get_real_estates(skip: int = 0, limit: int = 100):
+    try:
+        service = RealEstateService.build_service()
+        return service.query(offset=skip, limit=limit)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@hrp_api.get("/units/{unit_id}/real_estate/{real_estate_id}",
+             status_code=status.HTTP_200_OK, response_model=RealEstateOut)
+async def get_real_estate(real_estate_id: str):
+    try:
+        service = RealEstateService.build_service()
+        return service.read(real_estate_id)
+    except NoResultFound as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+""" """
