@@ -3,18 +3,18 @@ import os
 from sqlalchemy.sql import exists
 
 from hrp.db.db_conn import DBConn
-from models.model_exceptions.ModelError import ModelError
 from hrp.org.org.db_schemas.db_unit import Unit
-from hrp.org.org.valid_schemas.unit_valid import UnitIn
+from ..models import UnitRequestModel
+from hrp.org.org.controllers.error import UnitExist
 
 
 class UnitFactory:
 
     @classmethod
-    def create(cls, unit_in: UnitIn):
+    def create(cls, unit_in: UnitRequestModel):
         unit_id = unit_in.unit_id
         if cls.is_unit_exist(unit_id) is True:
-            raise ModelError("Unit already exist")
+            raise UnitExist(unit_id)
 
         if unit_in.join_pass is None:
             unit_in.join_pass = os.urandom()

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 
 
-class UserIn(BaseModel):
+class UserRequestModel(BaseModel):
     login: str
     first_name: str
     last_name: str
@@ -9,9 +9,8 @@ class UserIn(BaseModel):
     email: EmailStr | None
 
 
-class UserOut(BaseModel):
+class UserResponseModel(BaseModel):
     login: str
     first_name: str
     last_name: str
     email: EmailStr | None
-

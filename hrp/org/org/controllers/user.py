@@ -1,18 +1,18 @@
 from sqlalchemy.sql import exists
 
 from hrp.db.db_conn import DBConn
-from models.model_exceptions.ModelError import ModelError
 from hrp.org.org.db_schemas.db_user import User
-from models.org import UserIn
+from hrp.org.org.controllers.error import UserExist, UserAssignedUnit
+from hrp.org.org.models.user import UserRequestModel
 
 
 class UserFactory:
 
     @classmethod
-    def create(cls, cr_user: UserIn) -> User:
+    def create(cls, cr_user: UserRequestModel) -> User:
         login = cr_user.login
         if cls.is_user_exist(login) is True:
-            raise ModelError("User already exist")
+            raise UserExist(login)
         user = User(**cr_user.dict())
         DBConn.insert({user})
         user = cls.get_user(login)
@@ -55,20 +55,9 @@ class UserFactory:
         with DBConn.get_new_session() as session:
             user = session.query(User).filter(User.login == login).one()
             if cls.is_user_in_unit(user, unit.unit_id) is True:
-                raise ModelError("User already assigned to Unit")
+                raise UserAssignedUnit(user, unit.unit_id)
             user.units.append(unit)
             session.commit()
 
         user = cls.get_user(login)
         return user
-
-    def __iter__(self):
-        # ToDo
-        pass
-
-    def __next__(self):
-        # ToDo
-        pass
-
-
-
