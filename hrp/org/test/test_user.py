@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from hrp.org.org.db_schemas.db_user import User
-from hrp.org.org.unit import UnitFactory
+from hrp.org.org.controllers.unit import UnitFactory
 from models.org.user import UserFactory
 from hrp.org.org.valid_schemas.unit_valid import UnitIn
 from models.org.valid_schemas.user_valid import UserIn
