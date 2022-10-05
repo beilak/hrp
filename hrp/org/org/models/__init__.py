@@ -1,3 +1,3 @@
-from hrp.org.org.models.unit import UnitRequestModel, UnitResponseModel
-from hrp.org.org.models.user import UserResponseModel, UserRequestModel
-from hrp.org.org.models.unit_user import UserUnitRequestModel, UserUnitResponseModel, UnitUserResponseModel
+from .unit import UnitRequestModel, UnitResponseModel
+from .user import UserResponseModel, UserRequestModel
+from .unit_user import UserUnitRequestModel, UserUnitResponseModel, UnitUserResponseModel

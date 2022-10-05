@@ -2,16 +2,16 @@ import os
 
 from sqlalchemy.sql import exists
 
-from hrp.db.db_conn import DBConn
-from hrp.org.org.db_schemas.db_unit import Unit
+from ..db.db_conn import DBConn
+from ..db_schemas.db_unit import Unit
 from ..models import UnitRequestModel
-from hrp.org.org.controllers.error import UnitExist
+from .error import UnitExist
 
 
 class UnitFactory:
 
     @classmethod
-    def create(cls, unit_in: UnitRequestModel):
+    async def create(cls, unit_in: UnitRequestModel):
         unit_id = unit_in.unit_id
         if cls.is_unit_exist(unit_id) is True:
             raise UnitExist(unit_id)
@@ -24,23 +24,23 @@ class UnitFactory:
         return unit
 
     @classmethod
-    def is_unit_exist(cls, unit_id):
+    async def is_unit_exist(cls, unit_id):
         with DBConn.get_new_session() as session:
             return session.query(exists().where(Unit.unit_id == unit_id)).scalar()
 
     @classmethod
-    def get_unit(cls, unit_id):
+    async def get_unit(cls, unit_id):
         with DBConn.get_new_session() as session:
             return session.query(Unit).filter(Unit.unit_id == unit_id).one()
 
     @classmethod
-    def get_units(cls, offset=0, limit=100):
+    async def get_units(cls, offset=0, limit=100):
         with DBConn.get_new_session() as session:
             query = session.query(Unit).offset(offset).limit(limit)
             return query.all()
 
     @classmethod
-    def delete_unit(cls, unit):
+    async def delete_unit(cls, unit):
         with DBConn.get_new_session() as session:
             session.query(Unit).filter(Unit.unit_id == unit.unit_id).delete()
             session.commit()

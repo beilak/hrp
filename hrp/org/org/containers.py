@@ -1,18 +1,21 @@
-from dependency_injector import containers, providers
+from dependency_injector import containers
+from dependency_injector.providers import Configuration, Singleton
 from pydantic.env_settings import BaseSettings
-from hrp.org.org.controllers import UserFactory, UnitFactory
+from .controllers import UserFactory, UnitFactory
 
 
 class OrgContainer(containers.DeclarativeContainer):
     """Org. container"""
 
-    config: providers.Configuration = providers.Configuration()
+    wiring_config = containers.WiringConfiguration(modules=[".route.user", ".route.unit"])
 
-    user_factory: providers.Factory = providers.Factory(
+    config: Configuration = Configuration()
+
+    user_factory: Singleton[UserFactory] = Singleton(
         UserFactory,
     )
 
-    unit_factory: providers.Factory = providers.Factory(
+    unit_factory: Singleton[UnitFactory] = Singleton(
         UnitFactory,
     )
 

@@ -3,9 +3,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from ..models import UnitResponseModel, UnitRequestModel
 from ..containers import OrgContainer
-from hrp.org.org.controllers import UnitFactory
+from ..controllers import UnitFactory
 from typing import List
-from dependency_injector.wiring import inject
+from dependency_injector.wiring import inject, Provide
 
 unit_router: APIRouter = APIRouter()
 
@@ -18,7 +18,7 @@ unit_router: APIRouter = APIRouter()
 @inject
 async def create_unit(
         unit: UnitRequestModel,
-        unit_factory: UnitFactory = Depends(OrgContainer.unit_factory),
+        unit_factory: UnitFactory = Depends(Provide[OrgContainer.unit_factory]),
 ):
     """Post unit"""
     # ToDo Remove exception into func.
@@ -40,7 +40,7 @@ async def create_unit(
 async def get_units(
         skip: int = 0,
         limit: int = 100,
-        unit_factory: UnitFactory = Depends(OrgContainer.unit_factory),
+        unit_factory: UnitFactory = Depends(Provide[OrgContainer.unit_factory]),
 ):
     units = unit_factory.get_units(offset=skip, limit=limit)
     unit_out = []
@@ -56,7 +56,7 @@ async def get_units(
 @inject
 async def get_unit(
         unit_id: str,
-        unit_factory: UnitFactory = Depends(OrgContainer.unit_factory),
+        unit_factory: UnitFactory = Depends(Provide[OrgContainer.unit_factory]),
 ):
     unit = unit_factory.get_unit(unit_id)
     return UnitResponseModel(**unit.__dict__)

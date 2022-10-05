@@ -2,9 +2,9 @@ from sqlalchemy import String, Column, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import PasswordType
 
-from hrp.db.db_conn import Base
-from hrp.org.org.db_schemas.db_unit_user import UnitUser
-from hrp.org.org.db_schemas.db_user import User
+from ..db.db_conn import Base
+from .db_unit_user import UnitUser
+from .db_user import User
 
 
 class Unit(Base):
