@@ -91,7 +91,12 @@ class UserService:
 
     async def get_users(self, login: list | None = None, offset=0, limit=100):
         """Read user's detail"""
-        return await self._repository.get_by_login_list(login=login, offset=offset, limit=limit)
+        result = await self._repository.get_by_login_list(login=login, offset=offset, limit=limit)
+        users = []
+        for user in result:
+            users.append(user[0])
+        return users
+
 
     async def get_user(self, login):
         """Read user detail"""

@@ -27,7 +27,7 @@ async def get_users(
     users = await user_service.get_users(offset=skip, limit=limit)
     users_out = []
     for user in users:
-        users_out.append(UserResponseModel(**user[0].__dict__))
+        users_out.append(UserResponseModel(**user.__dict__))
     return users_out
 
 
