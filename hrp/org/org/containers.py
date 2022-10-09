@@ -1,23 +1,46 @@
 from dependency_injector import containers
-from dependency_injector.providers import Configuration, Singleton
+from dependency_injector.providers import Configuration, Singleton, Factory
 from pydantic.env_settings import BaseSettings
-from .controllers import UserFactory, UnitFactory
+from .controllers import UserRepository, UserService #, UnitFactory
+from .db.db_conn import DBEngineProvider, ORGDatabase
 
 
 class OrgContainer(containers.DeclarativeContainer):
     """Org. container"""
 
-    wiring_config = containers.WiringConfiguration(modules=[".route.user", ".route.unit"])
+    #wiring_config = containers.WiringConfiguration(modules=[".route.user", ".route.unit"])
+    wiring_config = containers.WiringConfiguration(modules=[".route.user"])
 
     config: Configuration = Configuration()
 
-    user_factory: Singleton[UserFactory] = Singleton(
-        UserFactory,
+    _db_engine: Singleton[DBEngineProvider] = Singleton(
+        DBEngineProvider,
+        db_user=config.db_user,
+        db_pwd=config.db_pwd,
+        db_host=config.db_host,
+        db_port=config.db_port,
+        db_name=config.db_name,
     )
 
-    unit_factory: Singleton[UnitFactory] = Singleton(
-        UnitFactory,
+    _org_db: Singleton[ORGDatabase] = Singleton(
+        ORGDatabase,
+        engine_provider=_db_engine,
     )
+
+    user_repository: Factory[UserRepository] = Factory(
+        UserRepository,
+        db_session=_org_db.provided.new_session,
+    )
+
+    user_service: Factory[UserService] = Factory(
+        UserService,
+        repository=user_repository,
+    )
+
+    # unit_factory: Singleton[UnitFactory] = Singleton(
+    #     UnitFactory,
+    #     db_session=_org_db.provided.session_factory,
+    # )
 
     @staticmethod
     def create_container(settings: BaseSettings) -> 'OrgContainer':

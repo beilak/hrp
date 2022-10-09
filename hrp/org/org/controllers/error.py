@@ -17,3 +17,9 @@ class UnitExist(Exception):
     """"Unit already exist"""
     def __init__(self, unit):
         super().__init__(f"Unit {unit} already exist")
+
+
+class UserNotFoundError(Exception):
+    """User not found"""
+    def __init__(self, login):
+        super().__init__(f"User {login} not found")

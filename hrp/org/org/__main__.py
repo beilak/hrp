@@ -3,7 +3,7 @@ from .config import Settings
 from typing import Final
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError, StarletteHTTPException
-from .route import user_router, unit_router
+from .route import user_router #, unit_router
 from .exceptions import valid_except_handler, http_except_handler
 
 
@@ -34,7 +34,7 @@ ORG_APP = FastAPI(
     )
 
 ORG_APP.include_router(user_router, prefix=_API_PREFIX, tags=["Users"])
-ORG_APP.include_router(unit_router, prefix=_API_PREFIX, tags=["Units"])
+#ORG_APP.include_router(unit_router, prefix=_API_PREFIX, tags=["Units"])
 
 ORG_APP.add_exception_handler(RequestValidationError, valid_except_handler)
 ORG_APP.add_exception_handler(StarletteHTTPException, http_except_handler)
