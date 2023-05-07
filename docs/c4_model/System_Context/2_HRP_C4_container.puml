@@ -1,0 +1,99 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+title Container Diagram for Home Resource Planing Service
+
+Person(customer, "Customer", "Service client")
+Person(admin, "Admin", "HomerERP Service Admin")
+
+Person_Ext(consultant, "Consultant", "Consultant, provide paid consulting service thought our Service")
+Person_Ext(advertiser, "Advertiser", "An advertiser who is promoted through our Service")
+
+
+
+Boundary(home_rp_board, "Home RP") {
+    Boundary(ui, "Customer UI") {
+        Container(web_app, "Web APP", "React", "Main Web UI")
+        Container(mobile_app, "Mobile APP", "Flatter", "Main Mobile UI")
+        Container(desktop_app, "Desktop APP", "Flatter", "Main Desktop UI")
+    }
+
+    Boundary(tech_ui, "Tech UI") {
+        Container(consultant_web_app, "Consultant APP", "React", "Web UI for Consulting")
+        Container(ad_web_app, "Ad APP", "React", "Web UI for Advertiser")
+        Container(admin_web_app, "Admin APP", "React", "Web UI for Admin Control")
+    }
+
+    Boundary(backend, "BackEnd") {
+    Container(gateway, "GateWay", "KrakenD", "External Gateway")
+
+
+    Boundary(services, "Services") {
+        Container(org, "Org Profile", "Python, FastAPI", "Profiling Org/User")
+        SystemDb(org_db, "PostgreSQL", "Org DB")
+        BiRel_D(org, org_db, "CRUD \n Org data", "https")
+        BiRel_U(org, gateway, "CRUD \n Org Info", "https")
+
+        Container(real_estate, "Real Estate", "Python, FastA0PI", "Maintenance Real Estate")
+        SystemDb(real_estate_db, "PostgreSQL", "Real Estate DB")
+        BiRel_D(real_estate, real_estate_db, "Event Sourcing \n Real Estate data", "https")
+        BiRel_U(real_estate, gateway, "Post/Get \n finance", "https")
+
+        Container(assets, "Assets", "Python, FastAPI", "Maintenance assets")
+        SystemDb(assets_db, "PostgreSQL", "Assets DB")
+        BiRel_D(assets, assets_db, "Event Sourcing \n assets data", "https")
+        BiRel_U(assets, gateway, "Post/Get \n assets", "https")
+
+        Container(finance, "Finance", "Python, FastAPI", "Maintenance Finance")
+        SystemDb(finance_db, "PostgreSQL", "Finance DB")
+        BiRel_D(finance, finance_db, "Event Sourcing \n Finance data", "https")
+        BiRel_U(finance, gateway, "Post/Get \n finance", "https")
+        Rel(finance, real_estate, "Get User Real Estate", "https")
+        Rel(finance, assets, "Get User assets", "https")
+
+        Container(notifications, "Notifications", "Python", "Notifications server")
+
+
+    }
+
+        Container(ipd, "Auth IDP", "Keycloak", "Auth provider")
+        SystemDb(auth_db, "PostgreSQL", "Auth DB")
+        BiRel_D(ipd, auth_db, "CRUD \n Auth data", "https")
+        BiRel_L(ipd, gateway, "Create User \n Get Token", "https")
+    }
+}
+
+' External systems
+System_Ext(telegram, "Telegram", "Telegram notifications")
+System_Ext(mail_server, "Email", "Email notifications")
+
+' Link Clients to UI
+BiRel_D(customer, web_app, "Post/Get data \n Read analytics", "https")
+BiRel_D(customer, mobile_app, "Post/Get data \n Read analytics", "https")
+BiRel_D(customer, desktop_app, "Post/Get data \n Read analytics", "https")
+
+' Link Tech user to UI
+BiRel_D(consultant, consultant_web_app, "Connect to Client Org \n and provide consulting service", "https")
+BiRel_D(advertiser, ad_web_app, "Create AD \nby user data", "https")
+BiRel_D(admin, admin_web_app, "Mange Service", "https")
+
+' Link Client UI to GateWay
+BiRel_D(web_app, gateway, "CRUD", "https")
+BiRel_D(mobile_app, gateway, "CRUD", "https")
+BiRel_D(desktop_app, gateway, "CRUD", "https")
+
+' Link Tech UI to GateWay
+BiRel_D(consultant_web_app, gateway, "CRUD", "https")
+BiRel_D(ad_web_app, gateway, "CRUD", "https")
+
+' Link Notification to External servers
+Rel_U(telegram, notifications, "Send msg", "https")
+Rel_U(mail_server, notifications, "Send mail", "SMTP")
+
+' link services to notif.
+Rel_L(org, notifications, "Send Notify", "MQ")
+Rel_L(finance, notifications, "Send Notify", "MQ")
+
+@enduml

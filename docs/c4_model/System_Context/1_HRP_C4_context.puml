@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+title System Context Diagram for Home Resource Planing Service;
+
+Person(customer, "Customer", "Service client")
+
+Person_Ext(consultant, "Consultant", "Consultant, provide paid consulting service thought our Service")
+Person_Ext(advertiser, "Advertiser", "An advertiser who is promoted through our Service")
+
+Boundary(home_rp_board, "Home RP internal board") {
+    Person(admin, "Admin", "HomerERP Service Admin")
+    System(home_rp, "Home Resource Planing Service")
+}
+
+System_Ext(telegram, "Telegram", "Telegram notifications")
+System_Ext(mail_server, "Email", "Email notifications")
+
+Rel_Neighbor(admin, home_rp, "Mange Service", "https")
+BiRel_D(customer, home_rp, "Maintain data", "https")
+BiRel_U(consultant, home_rp, "Consulting customer data", "https")
+BiRel_U(advertiser, home_rp, "Ad for Custom", "https")
+Rel_R(home_rp, telegram, "Send notifications", "https")
+Rel(home_rp, mail_server, "Send notifications", "SMTP")
+
+@enduml
