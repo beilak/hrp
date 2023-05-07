@@ -1,0 +1,48 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  tag: "15.2"
+
+namespace: "keycloak"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "keycloak_db"
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 5432
+
+ingress:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+postgres_opt:
+  postgresqlUsername: "dXNlcl9zdG9yYWdl"
+  postgresqlPassword: "dXNlcl9zdG9yYWdl"
+  postgresqlDatabase: "keycloak_db"
+  postgresqlHost: "keycloak_db"
+  postgresqlPort: "5432"
