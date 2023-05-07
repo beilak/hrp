@@ -6,7 +6,6 @@ metadata:
   labels:
     {{- include "keycloak_db.labels" . | nindent 4 }}
 spec:
-#  {{- if not .Values.autoscaling.enabled }}
   serviceName: {{ include "keycloak_db.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}

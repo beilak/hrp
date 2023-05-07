@@ -1,0 +1,52 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/bitnami/keycloak
+  pullPolicy: IfNotPresent
+  tag: "21.1.1"
+
+namespace: "keycloak"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 8080
+
+ingress:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+keycloak_opt:
+  keycloak_database_vendor: "POSTGRES"
+  keycloak_database_host: "keycloak_db"
+  keycloak_database_port: 5432
+  keycloak_database_name: "keycloak_db"
+  keycloak_database_user: "dXNlcl9zdG9yYWdl"
+  keycloak_database_password: "dXNlcl9zdG9yYWdl"
+  keycloak_admin_user: admin
+  keycloak_admin_password: admin
+  keycloak_http_port: 8080
