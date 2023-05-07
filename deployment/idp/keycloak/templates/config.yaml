@@ -6,6 +6,4 @@ metadata:
 data:
   DATABASE_VENDOR: {{ .Values.keycloak_opt.keycloak_database_vendor }}
   DATABASE_HOST: {{ .Values.keycloak_opt.keycloak_database_host }}
-  DATABASE_PORT: {{ .Values.keycloak_opt.keycloak_database_port }}
   DATABASE_NAME: {{ .Values.keycloak_opt.keycloak_database_name }}
-  KEYCLOAK_HTTP_PORT: {{ .Values.keycloak_opt.keycloak_http_port }}

@@ -45,4 +45,3 @@ postgres_opt:
   postgresqlPassword: "dXNlcl9zdG9yYWdl"
   postgresqlDatabase: "keycloakdb"
   postgresqlHost: "keycloakdb"
-  postgresqlPort: "5432"

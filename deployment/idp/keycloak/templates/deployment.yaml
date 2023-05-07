@@ -50,20 +50,14 @@ spec:
                   name: keycloak-config
                   key: DATABASE_HOST
             - name: KEYCLOAK_DATABASE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: keycloak-config
-                  key: DATABASE_PORT
+              value: {{ .Values.keycloak_database_port | quote }}
             - name: KEYCLOAK_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
                   name: keycloak-config
                   key: DATABASE_NAME
             - name: KEYCLOAK_HTTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: keycloak-config
-                  key: KEYCLOAK_HTTP_PORT
+              value: {{ .Values.service.port | quote }}
             - name: KEYCLOAK_DATABASE_USER
               valueFrom:
                 secretKeyRef:
