@@ -1,5 +1,5 @@
 apiVersion: v2
-name: postgres_keycloak_db
+name: keycloakdb
 description: A Helm chart for Keycloak db
 
 type: application

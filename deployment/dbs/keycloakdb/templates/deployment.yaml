@@ -1,17 +1,16 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "keycloak_db.fullname" . }}
-  namespace: {{ include ".Values.namespace" . }}
+  name: {{ include "keycloakdb.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    {{- include "keycloak_db.labels" . | nindent 4 }}
+    {{- include "keycloakdb.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "keycloak_db.fullname" . }}
+  serviceName: {{ include "keycloakdb.fullname" . }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "keycloak_db.selectorLabels" . | nindent 6 }}
+      {{- include "keycloakdb.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "keycloak_db.selectorLabels" . | nindent 8 }}
+        {{- include "keycloakdb.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "keycloak_db.serviceAccountName" . }}
+      serviceAccountName: {{ include "keycloakdb.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -42,17 +41,17 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: db-config
+                  name: keycloak-db-config
                   key: DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: db-secret
+                  name: keycloak-db-secret
                   key: DB_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-secret
+                  name: keycloak-db-secret
                   key: DB_PASS
 #          livenessProbe:
 #            httpGet:
