@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "keycloak.fullname" . }}
-  namespace: {{ include ".Values.namespace" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:
