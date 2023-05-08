@@ -1,17 +1,17 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "keycloak.fullname" . }}
+  name: {{ include "org-db.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "keycloak.labels" . | nindent 4 }}
+    {{- include "org-db.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "keycloak.selectorLabels" . | nindent 6 }}
+      {{- include "org-db.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "keycloak.selectorLabels" . | nindent 8 }}
+        {{- include "org-db.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
+      serviceAccountName: {{ include "org-db.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,51 +34,26 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["start-dev"]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
-            - name: KEYCLOAK_DATABASE_VENDOR
+            - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: keycloak-config
-                  key: DATABASE_VENDOR
-            - name: KEYCLOAK_DATABASE_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: keycloak-config
-                  key: DATABASE_HOST
-            - name: KEYCLOAK_DATABASE_PORT
-              value: {{ .Values.keycloak_database_port | quote }}
-            - name: KEYCLOAK_DATABASE_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: keycloak-config
-                  key: DATABASE_NAME
-            - name: KEYCLOAK_HTTP_PORT
-              value: {{ .Values.service.port | quote }}
-            - name: KEYCLOAK_DATABASE_USER
+                  name: org-db-config
+                  key: DB
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secret
-                  key: DATABASE_USER
-            - name: KEYCLOAK_DATABASE_PASSWORD
+                  name: org-db-secret
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secret
-                  key: DATABASE_PASSWORD
-            - name: KEYCLOAK_ADMIN_USER
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secret
-                  key: ADMIN_USER
-            - name: KEYCLOAK_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secret
-                  key: ADMIN_PASSWORD
+                  name: org-db-secret
+                  key: DB_PASS
           # livenessProbe:
           #   httpGet:
           #     path: /
