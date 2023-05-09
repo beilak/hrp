@@ -64,6 +64,6 @@ options:
   DB_USER: "b3JnX3Rlc3RfdXNlcg=="
   DB_PWD: "b3JnX3Rlc3RfdXNlcg=="
   DB_HOST: "org-db"
-  DB_PORT: "5432"
+  DB_PORT: 5432
   DB_NAME: "org"
   DB_DSN: "cG9zdGdyZXNxbDovL29yZ190ZXN0X3VzZXI6b3JnX3Rlc3RfdXNlckBvcmctZGI6NTQzMi9vcmc="

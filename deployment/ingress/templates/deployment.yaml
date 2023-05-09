@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "org.fullname" . }}
+  name: {{ include "ingress.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "org.labels" . | nindent 4 }}
+    {{- include "ingress.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "org.selectorLabels" . | nindent 6 }}
+      {{- include "ingress.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "org.selectorLabels" . | nindent 8 }}
+        {{- include "ingress.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "org.serviceAccountName" . }}
+      serviceAccountName: {{ include "ingress.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -38,41 +38,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret_name }}
-                  key: DB_USER
-            - name: DB_PWD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret_name }}
-                  key: DB_PWD
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.config_name }}
-                  key: DB_HOST
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.config_name }}
-                  key: DB_PORT
-            - name: DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.config_name }}
-                  key: DB_NAME
-
-#          livenessProbe:
-#            httpGet:
-#              path: /
-#              port: http
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
