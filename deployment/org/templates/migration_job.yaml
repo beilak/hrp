@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name:  {{ .Values.migration.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  template:
+    metadata:
+      name:  {{ .Values.migration.name }}
+    spec:
+      restartPolicy: Never
+#      initContainers:
+#        - name: {{ .Values.migration.name }}-check-db-ready
+#          image: {{ .Values.migration.db_image }}
+#          command: {{ .Values.migration.command_check_db_is_ready }}
+      containers:
+        - name: {{ .Values.migration.name }}-job
+          image: {{ .Values.migration.migration_image }}
+          env:
+            - name: DB_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret_name }}
+                  key: DB_DSN

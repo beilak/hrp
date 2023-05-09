@@ -1,0 +1,69 @@
+# Default values for org.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: beylak/homerp-org
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+namespace: "home-rp"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "org"
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 8000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secret_name: org-secret
+config_name: org-config
+
+migration:
+  name: "org-db-migration"
+  db_image: "postgres:15.2"
+  migration_image: beylak/homerp-org-migration:latest
+#  command_check_db_is_ready: [
+#    'sh', '-c', 'until pg_isready -h orgdb -p 5432; do echo waiting for database; sleep 2; done;'
+#  ]
+
+options:
+  DB_USER: "b3JnX3Rlc3RfdXNlcg=="
+  DB_PWD: "b3JnX3Rlc3RfdXNlcg=="
+  DB_HOST: "org-db"
+  DB_PORT: "5432"
+  DB_NAME: "org"
+  DB_DSN: "cG9zdGdyZXNxbDovL29yZ190ZXN0X3VzZXI6b3JnX3Rlc3RfdXNlckBvcmctZGI6NTQzMi9vcmc="

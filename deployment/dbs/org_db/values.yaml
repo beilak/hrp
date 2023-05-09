@@ -9,7 +9,7 @@ namespace: "home-rp"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "orgdb"
+fullnameOverride: "org-db"
 
 serviceAccount:
   create: false
@@ -44,4 +44,4 @@ postgres_opt:
   postgresqlUsername: "b3JnX3Rlc3RfdXNlcg=="
   postgresqlPassword: "b3JnX3Rlc3RfdXNlcg=="
   postgresqlDatabase: "org"
-  postgresqlHost: "orgdb"
+  postgresqlHost: "org-db"
