@@ -35,6 +35,10 @@ ingress:
   className: ""
   annotations: {}
 
+metrics:
+  serviceMonitor:
+    enabled: true
+
 resources: {}
 
 autoscaling:
