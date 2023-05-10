@@ -8,6 +8,7 @@ Execute from deployment directory:
 ### NameSpace
 0. NameSpace
    helm install home-rp ./homerp-namespace
+   kubectl create namespace monitoring 
 
 ### DB's:
 1. Keycloak DB 
@@ -26,12 +27,14 @@ Execute from deployment directory:
 
 
 ### Monitoring
-   1. kubectl create namespace monitoring 
-   2. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-   3. helm repo add stable https://charts.helm.sh/stable
-   4. helm repo update
-   5. helm install prom prometheus-community/kube-prometheus-stack -f ./monitoring/prometheus.yaml --atomic --namespace "monitoring"
-   6. kubectl port-forward service/prom-grafana 9000:80 --namespace "monitoring"
+      1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      2. helm repo add stable https://charts.helm.sh/stable
+      3. helm repo update
+
+   1. helm install prom prometheus-community/kube-prometheus-stack -f ./monitoring/prometheus.yaml --atomic --namespace "monitoring"
+   2. kubectl port-forward service/prom-grafana 9000:80 --namespace "monitoring"
+   3. kubectl port-forward service/prom-kube-prometheus-stack-prometheus 9090  --namespace "monitoring"
+
 
 
 Not working:
@@ -41,11 +44,13 @@ Not working:
 
 
 
-### Unistall all:
-   helm uninstall prom
-   helm uninstall ingress 
-   helm uninstall org 
-   helm uninstall keycloak 
-   helm uninstall org-db 
-   helm uninstall keycloakdb 
+### Unistall all:   
+   helm uninstall ingress
+   helm uninstall org
+   helm uninstall keycloak
+   helm uninstall org-db
+   helm uninstall keycloakdb
    helm uninstall home-rp
+
+   helm uninstall prom --namespace monitoring
+   kubectl delete namespace monitoring
