@@ -1,7 +1,5 @@
 # hrp
 
-
-
 ## k8s Deploy
 Execute from deployment directory:
 
@@ -15,11 +13,16 @@ Execute from deployment directory:
    helm install keycloakdb ./dbs/keycloakdb
 2. OrgDB
    helm install org-db ./dbs/org_db
+3. FinDB 
+   helm install fin-db ./dbs/fin_db
+   
 
 ### Services:
 1. Install Org 
    helm install org ./org
    # ToDo Add waiting for DB init.
+2. FinDB 
+   helm install fin ./fin
 
 ### Ingerss:
 1. Ingress
@@ -47,8 +50,10 @@ Not working:
 ### Unistall all:   
    helm uninstall ingress
    helm uninstall org
+   helm uninstall fin
    helm uninstall keycloak
    helm uninstall org-db
+   helm uninstall fin-db 
    helm uninstall keycloakdb
    helm uninstall home-rp
 
