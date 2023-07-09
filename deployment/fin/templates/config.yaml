@@ -9,6 +9,7 @@ data:
   DB_PORT: {{ .Values.options.DB_PORT | quote }}
   MQ_HOST: {{ .Values.options.MQ_HOST }}
   MQ_LISTEN_QUEUE: {{ .Values.options.MQ_LISTEN_QUEUE }}
+  MQ_EXCHANGE: {{ .Values.options.MQ_EXCHANGE }}
   MQ_ROUTING_KEY: {{ .Values.options.MQ_ROUTING_KEY }}
   REDIS_HOST: {{ .Values.options.MQ_LISTEN_QUEUE }}
   REDIS_PORT: {{ .Values.options.REDIS_PORT | quote }}

@@ -4,7 +4,7 @@
 Execute from deployment directory:
 
 ### NameSpace
-0. NameSpace
+0. NameSpace 
    helm install home-rp ./homerp-namespace
    kubectl create namespace monitoring 
 
@@ -21,8 +21,9 @@ Execute from deployment directory:
 1. Install Org 
    helm install org ./org
    # ToDo Add waiting for DB init.
-2. FinDB 
+2. Install Fin 
    helm install fin ./fin
+   # ToDo Add waiting for DB init.
 
 ### Ingerss:
 1. Ingress
