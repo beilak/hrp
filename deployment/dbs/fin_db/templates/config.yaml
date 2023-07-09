@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fin-db-config
+  namespace: {{ .Values.namespace }}
+data:
+  DB: {{ .Values.postgres_opt.postgresqlDatabase }}
+  DB_HOST: {{ .Values.postgres_opt.postgresqlHost }}

@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: beylak/homerp-org
+  repository: beylak/homerp-fin
   pullPolicy: IfNotPresent
   tag: "latest"
 
@@ -9,10 +9,10 @@ namespace: "home-rp"
 
 imagePullSecrets: []
 nameOverride: ""
-fullnameOverride: "org"
+fullnameOverride: "fin"
 
 serviceAccount:
-  create: false
+  create: true
   annotations: {}
   name: ""
 
@@ -35,6 +35,7 @@ metrics:
   serviceMonitor:
     enabled: false
 
+
 resources: {}
 
 autoscaling:
@@ -49,21 +50,21 @@ tolerations: []
 
 affinity: {}
 
-secret_name: org-secret
-config_name: org-config
+secret_name: fin-secret
+config_name: fin-config
 
 migration:
-  name: "org-db-migration"
+  name: "fin-db-migration"
   db_image: "postgres:15.2"
-  migration_image: beylak/homerp-org-migration:latest
+  migration_image: beylak/homerp-fin-migration:latest
 #  command_check_db_is_ready: [
-#    'sh', '-c', 'until pg_isready -h orgdb -p 5432; do echo waiting for database; sleep 2; done;'
+#    'sh', '-c', 'until pg_isready -h findb -p 5432; do echo waiting for database; sleep 2; done;'
 #  ]
 
 options:
   DB_USER: "b3JnX3Rlc3RfdXNlcg=="
   DB_PWD: "b3JnX3Rlc3RfdXNlcg=="
-  DB_HOST: "org-db"
+  DB_HOST: "fin-db"
   DB_PORT: 5432
-  DB_NAME: "org"
-  DB_DSN: "cG9zdGdyZXNxbDovL29yZ190ZXN0X3VzZXI6b3JnX3Rlc3RfdXNlckBvcmctZGI6NTQzMi9vcmc="
+  DB_NAME: "fin"
+  DB_DSN: "cG9zdGdyZXNxbDovL2Zpbl90ZXN0X3VzZXI6ZmluX3Rlc3RfdXNlckBmaW4tZGI6NTQzMi9maW4="

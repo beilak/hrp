@@ -1,0 +1,47 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  tag: "15.2"
+
+namespace: "home-rp"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "fin-db"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 5432
+
+ingress:
+  enabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+postgres_opt:
+  postgresqlUsername: "b3JnX3Rlc3RfdXNlcg=="
+  postgresqlPassword: "b3JnX3Rlc3RfdXNlcg=="
+  postgresqlDatabase: "fin"
+  postgresqlHost: "fin-db"

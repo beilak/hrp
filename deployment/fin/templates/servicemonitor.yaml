@@ -1,0 +1,24 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "fin.fullname" . }}
+  namespace: "monitoring"
+  labels:
+    {{- include "fin.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ include "fin.fullname" . }}
+  namespaceSelector:
+    matchNames:
+      - "home-rp"
+#    - "{{ $.Release.Namespace }}"
+#    - "monitoring"
+
+  selector:
+    matchLabels:
+      {{- include "fin.selectorLabels" . | nindent 6 }}
+  endpoints:
+  - interval: 15s
+    port: http
+    path: /metrics
+{{- end }}
