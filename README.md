@@ -3,10 +3,23 @@
 ## k8s Deploy
 Execute from deployment directory:
 
+helm repo add stable https://charts.helm.sh/stable
+
+helm repo update 
+
+
+
 ### NameSpace
 0. NameSpace 
    helm install home-rp ./homerp-namespace
    kubectl create namespace monitoring 
+
+# Infrastructure
+1. RabbitMQ 
+   helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml
+2. Redis
+   helm install my-release oci://registry-1.docker.io/bitnamicharts/redis 
+
 
 ### DB's:
 1. Keycloak DB 
@@ -57,6 +70,8 @@ Not working:
    helm uninstall fin-db 
    helm uninstall keycloakdb
    helm uninstall home-rp
+
+   helm delete mq --namespace home-rp
 
    helm uninstall prom --namespace monitoring
    kubectl delete namespace monitoring
