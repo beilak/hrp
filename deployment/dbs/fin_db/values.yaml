@@ -12,7 +12,7 @@ nameOverride: ""
 fullnameOverride: "fin-db"
 
 serviceAccount:
-  create: true
+  create: false
   annotations: {}
   name: ""
 

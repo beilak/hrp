@@ -59,6 +59,14 @@ ingress:
               name: org
               port:
                 number: 8000
+        - path: /fin(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: fin
+              port:
+                number: 8000
+
   tls: []
 
 resources:

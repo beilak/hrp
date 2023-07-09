@@ -67,3 +67,8 @@ options:
   DB_PORT: 5432
   DB_NAME: "org"
   DB_DSN: "cG9zdGdyZXNxbDovL29yZ190ZXN0X3VzZXI6b3JnX3Rlc3RfdXNlckBvcmctZGI6NTQzMi9vcmc="
+  MQ_USER: "dGVzdF91c2Vy"
+  MQ_PASS: "dGVzdF9wYXNz"
+  MQ_HOST: "mq"
+  MQ_EXCHANGE: "hrp"
+  MQ_ROUTING_KEY: "org_event"

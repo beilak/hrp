@@ -7,3 +7,8 @@ data:
   DB_HOST: {{ .Values.options.DB_HOST }}
   DB_NAME: {{ .Values.options.DB_NAME }}
   DB_PORT: {{ .Values.options.DB_PORT | quote }}
+  MQ_HOST: {{ .Values.options.MQ_HOST }}
+  MQ_LISTEN_QUEUE: {{ .Values.options.MQ_LISTEN_QUEUE }}
+  MQ_ROUTING_KEY: {{ .Values.options.MQ_ROUTING_KEY }}
+  REDIS_HOST: {{ .Values.options.MQ_LISTEN_QUEUE }}
+  REDIS_PORT: {{ .Values.options.REDIS_PORT | quote }}

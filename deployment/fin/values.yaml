@@ -12,7 +12,7 @@ nameOverride: ""
 fullnameOverride: "fin"
 
 serviceAccount:
-  create: true
+  create: false
   annotations: {}
   name: ""
 
@@ -67,4 +67,13 @@ options:
   DB_HOST: "fin-db"
   DB_PORT: 5432
   DB_NAME: "fin"
-  DB_DSN: "cG9zdGdyZXNxbDovL2Zpbl90ZXN0X3VzZXI6ZmluX3Rlc3RfdXNlckBmaW4tZGI6NTQzMi9maW4="
+  DB_DSN: "cG9zdGdyZXNxbDovL29yZ190ZXN0X3VzZXI6b3JnX3Rlc3RfdXNlckBmaW4tZGI6NTQzMi9maW4="
+  MQ_USER: "dGVzdF91c2Vy"
+  MQ_PASS: "dGVzdF9wYXNz"
+  MQ_HOST: "mq"
+  MQ_LISTEN_QUEUE: "FIN_QUEUE"
+  MQ_EXCHANGE: "hrp"
+  MQ_ROUTING_KEY: "org_event"
+  REDIS_PWD: "dGVzdF9wYXNz"
+  REDIS_HOST: "cache_redis"
+  REDIS_PORT: 6379
