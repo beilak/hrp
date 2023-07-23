@@ -1,12 +1,32 @@
 # hrp
+### ToDo
+ReadME is not ready
+
 
 ## k8s Deploy
 Execute from deployment directory:
 
+
 helm repo add stable https://charts.helm.sh/stable
-
 helm repo update 
+--helm install stable/nginx-ingress --name nginx-ingress --set controller.publishService.enabled=true
 
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install hrp-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true --namespace home-rp
+
+helm uninstall hrp-ingress --namespace home-rp     
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml --namespace home-rp
+
+###Setup
+1. helm repo add stable https://charts.helm.sh/stable
+2. helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+3. helm repo update
+4. For docker-desctop 
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml
+5. 
 
 
 ### NameSpace
@@ -16,9 +36,9 @@ helm repo update
 
 # Infrastructure
 1. RabbitMQ 
-   helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml
+   helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml --namespace home-rp
 2. Redis
-   helm install my-release oci://registry-1.docker.io/bitnamicharts/redis 
+   helm install cache-redis oci://registry-1.docker.io/bitnamicharts/redis  -f ./infra/redis/values.yaml --namespace home-rp
 
 
 ### DB's:
@@ -40,8 +60,8 @@ helm repo update
 
 ### Ingerss:
 1. Ingress
-   helm install ingress ./ingress
-
+--   helm install ingress ./ingress
+kubectl apply -f ingress/ingress.yaml
 
 ### Monitoring
       1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -71,7 +91,45 @@ Not working:
    helm uninstall keycloakdb
    helm uninstall home-rp
 
-   helm delete mq --namespace home-rp
+   helm uninstall mq   --namespace home-rp
+   helm uninstall cache-redis --namespace home-rp
 
    helm uninstall prom --namespace monitoring
    kubectl delete namespace monitoring
+
+
+
+
+
+# HomeWork 
+
+helm install home-rp ./homerp-namespace
+kubectl create namespace monitoring 
+
+helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml --namespace home-rp
+helm install cache-redis oci://registry-1.docker.io/bitnamicharts/redis  -f ./infra/redis/values.yaml --namespace home-rp
+
+helm install org-db ./dbs/org_db
+helm install fin-db ./dbs/fin_db
+
+helm install org ./org
+helm install fin ./fin
+kubectl apply -f ingress/ingress.yaml
+
+
+
+-----DEL
+kubectl delete -f ingress/ingress.yaml
+kubectl delete  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml    
+
+helm uninstall hrp-ingress --namespace home-rp   
+helm uninstall org
+helm uninstall fin
+helm uninstall org-db
+helm uninstall fin-db
+
+helm uninstall mq   --namespace home-rp
+helm uninstall cache-redis --namespace home-rp
+
+helm uninstall home-rp
+kubectl delete namespace monitoring
