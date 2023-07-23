@@ -116,6 +116,20 @@ helm install org ./org
 helm install fin ./fin
 kubectl apply -f ingress/ingress.yaml
 
+-----DEL HomeWork
+helm uninstall hrp-ingress --namespace home-rp   
+helm uninstall org
+helm uninstall fin
+helm uninstall org-db
+helm uninstall fin-db
+
+helm uninstall mq   --namespace home-rp
+helm uninstall cache-redis --namespace home-rp
+
+helm uninstall home-rp
+kubectl delete namespace monitoring
+
+
 
 
 -----DEL
