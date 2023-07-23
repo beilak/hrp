@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: beylak/homerp-org
@@ -10,6 +10,8 @@ namespace: "home-rp"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: "org"
+
+selectorLabels: "org"
 
 serviceAccount:
   create: false
@@ -56,9 +58,18 @@ migration:
   name: "org-db-migration"
   db_image: "postgres:15.2"
   migration_image: beylak/homerp-org-migration:latest
-#  command_check_db_is_ready: [
-#    'sh', '-c', 'until pg_isready -h orgdb -p 5432; do echo waiting for database; sleep 2; done;'
-#  ]
+  command_check_db_is_ready: [
+    'sh', '-c', 'until pg_isready -h org-db -p 5432; do echo waiting for database; sleep 2; done;'
+  ]
+
+initContainers:
+  - name:  "org-db-migration-check-db-ready"
+    image: "postgres:15.2"
+    command: [
+      'sh', '-c', 'until pg_isready -h org-db -p 5432; do echo waiting for database; sleep 2; done;'
+    ]
+    # ToDo init command was replaced to template.!!!
+
 
 options:
   DB_USER: "b3JnX3Rlc3RfdXNlcg=="

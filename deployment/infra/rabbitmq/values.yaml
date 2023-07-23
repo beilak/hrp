@@ -59,13 +59,11 @@ image:
 
 ## @param nameOverride String to partially override rabbitmq.fullname template (will maintain the release name)
 ##
-nameOverride: ""
+nameOverride: "mq"
 ## @param fullnameOverride String to fully override rabbitmq.fullname template
 ##
-fullnameOverride: ""
+fullnameOverride: "mq"
 ## @param namespaceOverride String to fully override common.names.namespace
-##
-namespaceOverride: "home-rp"
 ## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
 ##
 kubeVersion: ""
@@ -958,7 +956,7 @@ persistence:
 service:
   ## @param service.type Kubernetes Service type
   ##
-  type: ClusterIP
+  type: NodePort  #ClusterIP
 
   ## @param service.portEnabled Amqp port. Cannot be disabled when `auth.tls.enabled` is `false`. Listener can be disabled with `listeners.tcp = none`.
   ##

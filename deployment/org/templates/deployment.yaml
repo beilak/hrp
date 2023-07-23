@@ -91,12 +91,18 @@ spec:
                   key: MQ_PASS
 #          livenessProbe:
 #            httpGet:
-#              path: /
-#              port: http
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: http
+#              port: 8000
+#              path: /check/readiness # !!!!!
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              port: 8000
+              path: /check/readiness
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

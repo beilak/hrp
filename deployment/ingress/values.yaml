@@ -36,7 +36,7 @@ securityContext:
   # runAsUser: 1000
 
 service:
-  type: NodePort
+  type: LoadBalancer #NodePort
   port: 80
 
 ingress:
@@ -47,8 +47,6 @@ ingress:
       nginx.ingress.kubernetes.io/use-regex: "true",
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     }
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: home-rp.ru
       paths:
@@ -59,13 +57,7 @@ ingress:
               name: org
               port:
                 number: 8000
-        - path: /fin(/|$)(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: fin
-              port:
-                number: 8000
+
 
   tls: []
 

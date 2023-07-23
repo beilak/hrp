@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hrp-ingress-router
+  namespace: "home-rp"
+  annotations:
+  #  nginx.ingress.kubernetes.io/use-regex: "true"
+    {
+      nginx.ingress.kubernetes.io/use-regex: "true",
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    }
+
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: home-rp.ru
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: org
+                port:
+                  number: 8000
+            path: /org(/|$)(.*)
+          - pathType: Prefix
+            backend:
+              service:
+                name: fin
+                port:
+                  number: 8000
+            path: /fin(/|$)(.*)

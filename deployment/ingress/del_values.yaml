@@ -1,0 +1,105 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+
+namespace: "home-rp"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer #NodePort
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+#    {
+#      nginx.ingress.kubernetes.io/use-regex: "true",
+#      nginx.ingress.kubernetes.io/rewrite-target: /$2
+#    }
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+      - host: home-rp.ru
+        paths:
+          - path: /org
+            pathType: Prefix
+            backend:
+              service:
+                name: org
+                port:
+                  number: 8000
+
+  #    - host: arch.homework
+#      paths:
+#        - path: /*
+#          pathType: Prefix
+#          backend:
+#            service:
+#              name: org
+#              port:
+#                number: 8000
+#    - host: home-rp.ru
+#      paths:
+#        - path: /org(/|$)(.*)
+#          pathType: Prefix
+#          backend:
+#            service:
+#              name: org
+#              port:
+#                number: 8000
+#        - path: /fin(/|$)(.*)
+#          pathType: Prefix
+#          backend:
+#            service:
+#              name: fin
+#              port:
+#                number: 8000
+
+  tls: []
+
+resources:
+  {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

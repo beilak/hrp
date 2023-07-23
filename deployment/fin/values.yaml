@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: beylak/homerp-fin
@@ -75,5 +75,5 @@ options:
   MQ_EXCHANGE: "hrp"
   MQ_ROUTING_KEY: "org_event"
   REDIS_PWD: "dGVzdF9wYXNz"
-  REDIS_HOST: "cache_redis"
+  REDIS_HOST: "cache-redis-master"
   REDIS_PORT: 6379
