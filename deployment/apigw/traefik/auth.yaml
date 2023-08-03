@@ -1,0 +1,29 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth
+spec:
+  forwardAuth:
+    address: http://auth.home-rp.svc.cluster.local/auth/
+    authResponseHeaders:
+      - x-username
+      - x-auth-token
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: auth-routes
+spec:
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`)
+      priority: 10 # Добавляем маршрут с большим приоритетом, чтобы эти натсройки применились поверх предыдущих
+      services:
+        - name: org
+          namespace: home-rp
+          port: 8000
+      middlewares:
+        - name: auth # Включаем forward-auth
+          namespace: home-rp
