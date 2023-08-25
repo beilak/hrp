@@ -81,30 +81,23 @@ ingress-nginx ingress-nginx/ingress-nginx
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 kubectl create namespace traefik
+
+v1
 helm install --version "10.1.2" -n traefik -f apigw/traefik/traefik.yaml traefik traefik/traefik
+v2
+helm install traefik traefik/traefik -n traefik --values=apigw/traefik/traefik.yaml
 
-kubectl apply -f apigw/traefik/routes.yaml -n traefik
-kubectl apply -f apigw/traefik/auth.yaml  -n traefik
+kubectl apply -f apigw/traefik/routes.yaml -n home-rp
+kubectl apply -f apigw/traefik/auth.yaml  -n home-rp
 
 
+delete 
+kubectl delete  -f apigw/traefik/routes.yaml -n home-rp 
+kubectl delete -f apigw/traefik/auth.yaml  -n home-rp
 
+helm uninstall traefik  -n traefik
 
-[//]: # (kubectl create namespace istio-ingress)
-
-[//]: # (helm install istio-ingressgateway istio/gateway -n istio-ingress)
-
-[//]: # (k apply -f apigw/istio.yaml)
-
-[//]: # ()
-[//]: # (helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx)
-
-[//]: # (helm repo update)
-
-[//]: # ()
-[//]: # (helm install --version "3.35.0" -n home-rp -f apigw/nginx.yaml \)
-
-[//]: # (ingress-nginx ingress-nginx/ingress-nginx)
-
+kubectl delete namespace traefik
 
 
 
@@ -112,12 +105,16 @@ kubectl apply -f apigw/traefik/auth.yaml  -n traefik
 0. NameSpace
    helm install home-rp ./homerp-namespace
    kubectl create namespace monitoring 
+   kubectl create namespace traefik
 
 # Infrastructure
 1. RabbitMQ 
    helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml --namespace home-rp
 2. Redis
    helm install cache-redis oci://registry-1.docker.io/bitnamicharts/redis  -f ./infra/redis/values.yaml --namespace home-rp
+3. traefik
+   helm install traefik traefik/traefik -n traefik --values=apigw/traefik/traefik.yaml
+
 
 
 ### DB's:
@@ -139,10 +136,15 @@ kubectl apply -f apigw/traefik/auth.yaml  -n traefik
 3. Install Auth 
    helm install auth ./auth
 
+### GW
+   kubectl apply -f apigw/traefik/routes.yaml -n home-rp
+   kubectl apply -f apigw/traefik/auth.yaml  -n home-rp
+
+
 ### Ingerss:
-1. Ingress
---   helm install ingress ./ingress
-kubectl apply -f ingress/ingress.yaml
+ 1. Ingress
+# --   helm install ingress ./ingress
+# kubectl apply -f ingress/ingress.yaml
 
 ### Monitoring
       1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -155,6 +157,11 @@ kubectl apply -f ingress/ingress.yaml
 
 
 
+PORT FORWARD
+minikube service -n traefik traefik
+
+
+
 Not working:
 1. Keycloak 
    helm install keycloak ./idp/keycloak/
@@ -164,8 +171,11 @@ Not working:
 
 ### Unistall all:   
    helm uninstall ingress
+   kubectl delete  -f apigw/traefik/routes.yaml -n home-rp 
+   kubectl delete -f apigw/traefik/auth.yaml  -n home-rp
    helm uninstall org
    helm uninstall fin
+   helm uninstall auth
    helm uninstall keycloak
    helm uninstall org-db
    helm uninstall fin-db 
@@ -175,10 +185,11 @@ Not working:
    helm uninstall mq   --namespace home-rp
    helm uninstall cache-redis --namespace home-rp
 
+   helm uninstall traefik  -n traefik
+
    helm uninstall prom --namespace monitoring
-   kubectl delete namespace monitoring
-
-
+   kubectl delete namespace monitoring 
+   kubectl delete namespace traefik
 
 
 
@@ -195,17 +206,68 @@ istioctl operator init --watchedNamespaces istio-system --operatorNamespace isti
 
 
 -----DEL
-kubectl delete -f ingress/ingress.yaml
-kubectl delete  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml    
 
-helm uninstall hrp-ingress --namespace home-rp   
+[//]: # (kubectl delete -f ingress/ingress.yaml)
+
+[//]: # (kubectl delete  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml    )
+
+[//]: # ()
+[//]: # (helm uninstall hrp-ingress --namespace home-rp   )
+
+[//]: # (helm uninstall org)
+
+[//]: # (helm uninstall fin)
+
+[//]: # (helm uninstall auth)
+
+[//]: # (helm uninstall org-db)
+
+[//]: # (helm uninstall fin-db)
+
+[//]: # ()
+[//]: # (helm uninstall mq   --namespace home-rp)
+
+[//]: # (helm uninstall cache-redis --namespace home-rp)
+
+[//]: # ()
+[//]: # (helm uninstall home-rp)
+
+[//]: # (kubectl delete namespace monitoring)
+
+
+
+
+# Home Work GW
+
+helm install home-rp ./homerp-namespace
+kubectl create namespace traefik
+
+helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml --namespace home-rp
+helm install traefik traefik/traefik -n traefik --values=apigw/traefik/traefik.yaml
+
+helm install org-db ./dbs/org_db
+helm install org ./org
+helm install auth ./auth
+
+kubectl apply -f apigw/traefik/routes.yaml -n home-rp
+kubectl apply -f apigw/traefik/auth.yaml  -n home-rp
+
+PORT FORWARD
+minikube service -n traefik traefik
+
+
+
+
+DEL
+
+kubectl delete  -f apigw/traefik/routes.yaml -n home-rp 
+kubectl delete -f apigw/traefik/auth.yaml  -n home-rp
 helm uninstall org
-helm uninstall fin
+helm uninstall auth
 helm uninstall org-db
-helm uninstall fin-db
+helm uninstall home-rp
 
 helm uninstall mq   --namespace home-rp
-helm uninstall cache-redis --namespace home-rp
+helm uninstall traefik  -n traefik
 
-helm uninstall home-rp
-kubectl delete namespace monitoring
+kubectl delete namespace traefik
