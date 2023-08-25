@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: beylak/homerp-auth
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "latest"
 
 namespace: "home-rp"

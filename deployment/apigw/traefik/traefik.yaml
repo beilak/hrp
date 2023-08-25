@@ -1,8 +1,19 @@
 ---
-providers:
-  kubernetesIngress:
-    enabled: false # Настраиваем маршруты только с помощью CRD (IngressRoute)
+#providers:
+#  kubernetesIngress:
+#    enabled: false # Настраиваем маршруты только с помощью CRD (IngressRoute)
 ports:
+  traefik:
+    port: 9000
+    # hostPort: 9000
+    expose: false
+    exposedPort: 9000
+    protocol: TCP
+  web:
+    port: 8000
+    expose: true
+    exposedPort: 8000
+    protocol: TCP
   websecure:
     expose: false # Выключаем https
 logs:
@@ -10,3 +21,23 @@ logs:
     enabled: true
   general:
     level: DEBUG
+
+#api:
+#  insecure: true
+#  dashboard: true
+
+#entryPoints:
+#  web:
+#    address: ":80"
+
+
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    annotations: {}
+    labels: {}
+    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    entryPoints: ["traefik"]
+    middlewares: []
+    tls: {}

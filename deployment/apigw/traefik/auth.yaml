@@ -5,25 +5,33 @@ metadata:
   name: auth
 spec:
   forwardAuth:
-    address: http://auth.home-rp.svc.cluster.local/auth/
+    address: http://auth.home-rp.svc.cluster.local:8000/api/v1/auth
+    tls:
+      insecureSkipVerify: true
+    trustForwardHeader: true
+#    authRequestHeaders:
+#      - Authorization
     authResponseHeaders:
-      - x-username
-      - x-auth-token
+      - X-username
+      - X-auth-token
+      - X-unit
 
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: auth-routes
-spec:
-  routes:
-    - kind: Rule
-      match: PathPrefix(`/`)
-      priority: 10 # Добавляем маршрут с большим приоритетом, чтобы эти натсройки применились поверх предыдущих
-      services:
-        - name: org
-          namespace: home-rp
-          port: 8000
-      middlewares:
-        - name: auth # Включаем forward-auth
-          namespace: home-rp
+#apiVersion: traefik.containo.us/v1alpha1
+#kind: IngressRoute
+#metadata:
+#  name: auth-routes
+#spec:
+#  entryPoints:
+#    - web
+#  routes:
+#    - match: Host(`home-rp.ru`) && PathPrefix(`/`)
+#      kind: Rule
+#      priority: 10
+#      services:
+#        - name: org
+#          namespace: home-rp
+#          port: 8000
+#      middlewares:
+#        - name: auth
+#          namespace: home-rp
