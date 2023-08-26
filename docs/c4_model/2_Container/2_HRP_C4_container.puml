@@ -12,7 +12,6 @@ Person_Ext(consultant, "Consultant", "Consultant, provide paid consulting servic
 Person_Ext(advertiser, "Advertiser", "An advertiser who is promoted through our Service")
 
 
-
 Boundary(home_rp_board, "Home RP") {
     Boundary(ui, "Customer UI") {
         Container(web_app, "Web APP", "React", "Main Web UI")
@@ -31,30 +30,51 @@ Boundary(home_rp_board, "Home RP") {
 
 
     Boundary(services, "Services") {
+
+        Boundary(infrastructure, "Infrastructure") {
+            Boundary(Infrastructure_DB, "DB") {
+                SystemDb(org_db, "PostgreSQL", "Org DB")
+                SystemDb(real_estate_db, "PostgreSQL", "Real Estate DB")
+                SystemDb(assets_db, "PostgreSQL", "Assets DB")
+                SystemDb(finance_db, "PostgreSQL", "Finance DB")
+            }
+
+            Boundary(Infrastructure_MQ, "MQ") {
+                ContainerDb(MQ, "RabbitMQ", "Event Bus")
+            }
+        }
+
+
         Container(org, "Org Profile", "Python, FastAPI", "Profiling Org/User")
-        SystemDb(org_db, "PostgreSQL", "Org DB")
         BiRel_D(org, org_db, "CRUD \n Org data", "https")
         BiRel_U(org, gateway, "CRUD \n Org Info", "https")
 
         Container(real_estate, "Real Estate", "Python, FastA0PI", "Maintenance Real Estate")
-        SystemDb(real_estate_db, "PostgreSQL", "Real Estate DB")
         BiRel_D(real_estate, real_estate_db, "Event Sourcing \n Real Estate data", "https")
         BiRel_U(real_estate, gateway, "Post/Get \n finance", "https")
 
         Container(assets, "Assets", "Python, FastAPI", "Maintenance assets")
-        SystemDb(assets_db, "PostgreSQL", "Assets DB")
         BiRel_D(assets, assets_db, "Event Sourcing \n assets data", "https")
         BiRel_U(assets, gateway, "Post/Get \n assets", "https")
 
         Container(finance, "Finance", "Python, FastAPI", "Maintenance Finance")
-        SystemDb(finance_db, "PostgreSQL", "Finance DB")
         BiRel_D(finance, finance_db, "Event Sourcing \n Finance data", "https")
         BiRel_U(finance, gateway, "Post/Get \n finance", "https")
-        Rel(finance, real_estate, "Get User Real Estate", "https")
-        Rel(finance, assets, "Get User assets", "https")
 
         Container(notifications, "Notifications", "Python", "Notifications server")
 
+
+
+        ' Link Publish event's
+        Rel_D(org, MQ, "Event New User/Unit", "AMQP")
+        Rel_D(finance, MQ, "Event New Target", "AMQP")
+        Rel_D(assets, MQ, "Event New Assert", "AMQP")
+        Rel_D(real_estate, MQ, "Event Real Estate", "AMQP")
+
+        ' Link Subscribe event's
+        Rel_D(MQ, finance, "Sub new Units", "AMQP")
+        Rel_D(MQ, real_estate, "Sub New Fin Events", "AMQP")
+        Rel_D(MQ, notifications, "Sub notify events", "AMQP")
 
     }
 
@@ -93,7 +113,7 @@ Rel_U(telegram, notifications, "Send msg", "https")
 Rel_U(mail_server, notifications, "Send mail", "SMTP")
 
 ' link services to notif.
-Rel_L(org, notifications, "Send Notify", "MQ")
-Rel_L(finance, notifications, "Send Notify", "MQ")
+'Rel_L(org, notifications, "Send Notify", "MQ")
+'Rel_L(finance, notifications, "Send Notify", "MQ")
 
 @enduml
