@@ -193,61 +193,22 @@ Not working:
 
 
 
-# HomeWork API
-
-istioctl operator init --watchedNamespaces istio-system --operatorNamespace istio-operator
 
 
-# (helm repo add datawire https://www.getambassador.io)
-# (helm repo update)
-
-
-
-
-
------DEL
-
-[//]: # (kubectl delete -f ingress/ingress.yaml)
-
-[//]: # (kubectl delete  -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/aws/deploy.yaml    )
-
-[//]: # ()
-[//]: # (helm uninstall hrp-ingress --namespace home-rp   )
-
-[//]: # (helm uninstall org)
-
-[//]: # (helm uninstall fin)
-
-[//]: # (helm uninstall auth)
-
-[//]: # (helm uninstall org-db)
-
-[//]: # (helm uninstall fin-db)
-
-[//]: # ()
-[//]: # (helm uninstall mq   --namespace home-rp)
-
-[//]: # (helm uninstall cache-redis --namespace home-rp)
-
-[//]: # ()
-[//]: # (helm uninstall home-rp)
-
-[//]: # (kubectl delete namespace monitoring)
-
-
-
-
-# Home Work GW
-
+# Project
 helm install home-rp ./homerp-namespace
 kubectl create namespace traefik
 
 helm install mq oci://registry-1.docker.io/bitnamicharts/rabbitmq -f ./infra/rabbitmq/values.yaml --namespace home-rp
 helm install traefik traefik/traefik -n traefik --values=apigw/traefik/traefik.yaml
+helm install cache-redis oci://registry-1.docker.io/bitnamicharts/redis  -f ./infra/redis/values.yaml --namespace home-rp
 
 helm install org-db ./dbs/org_db
+helm install fin-db ./dbs/fin_db
+
 helm install org ./org
 helm install auth ./auth
+helm install fin ./fin
 
 kubectl apply -f apigw/traefik/routes.yaml -n home-rp
 kubectl apply -f apigw/traefik/auth.yaml  -n home-rp
@@ -256,6 +217,10 @@ PORT FORWARD
 minikube service -n traefik traefik
 
 
+
+
+
+### GW
 
 
 DEL
@@ -267,7 +232,14 @@ helm uninstall auth
 helm uninstall org-db
 helm uninstall home-rp
 
+
+helm uninstall fin
+helm uninstall fin-db 
+
+
 helm uninstall mq   --namespace home-rp
+helm uninstall cache-redis --namespace home-rp
+
 helm uninstall traefik  -n traefik
 
 kubectl delete namespace traefik
