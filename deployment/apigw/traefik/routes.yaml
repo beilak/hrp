@@ -17,6 +17,7 @@ spec:
   stripPrefix:
     prefixes:
       - /org
+      - /fin
 ---
 
 #apiVersion: traefik.containo.us/v1alpha1
@@ -43,6 +44,18 @@ spec:
       kind: Rule
       services:
         - name: org
+          namespace: home-rp
+          port: 8000
+      middlewares:
+        - name: strip-serv-prefix
+          namespace: home-rp
+        - name: auth
+          namespace: home-rp
+
+    - match: Host(`home-rp.ru`) && PathPrefix(`/fin`)
+      kind: Rule
+      services:
+        - name: fin
           namespace: home-rp
           port: 8000
       middlewares:
